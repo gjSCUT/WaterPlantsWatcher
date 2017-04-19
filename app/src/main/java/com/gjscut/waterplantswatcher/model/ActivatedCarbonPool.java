@@ -5,5 +5,8 @@ package com.gjscut.waterplantswatcher.model;
  */
 
 public class ActivatedCarbonPool extends Process {
-
+    private final static String type = ActivatedCarbonPool.class.toString();
+    public static String getType() {
+        return type;
+    }
 }

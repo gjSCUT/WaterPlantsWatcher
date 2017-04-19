@@ -6,4 +6,7 @@ package com.gjscut.waterplantswatcher.model;
 
 public class PumpRoomOut extends Process {
     public Pump[] pumps;
+    public static String getType() {
+        return PumpRoomOut.class.toString();
+    }
 }

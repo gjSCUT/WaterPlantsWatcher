@@ -6,4 +6,7 @@ package com.gjscut.waterplantswatcher.model;
 
 public class OzonePoolMain extends Process {
     public float zoneAmount;
+    public static String getType() {
+        return OzonePoolMain.class.toString();
+    }
 }

@@ -5,4 +5,5 @@ package com.gjscut.waterplantswatcher.model;
  */
 
 public class CombinedWell extends Process {
+    private final String type = CombinedWell.class.toString();
 }

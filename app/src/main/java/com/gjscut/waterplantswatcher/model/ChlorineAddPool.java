@@ -6,4 +6,5 @@ package com.gjscut.waterplantswatcher.model;
 
 public class ChlorineAddPool extends Process {
     public float chlorineAmount;
+    private final String type = ChlorineAddPool.class.toString();
 }
