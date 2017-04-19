@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             android:columnCount="7"
             android:rowCount="8"
-            android:padding="5dp">
+            android:padding="20dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -26,189 +26,254 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="40dp"
+                android:layout_marginBottom="20dp"
                 android:layout_columnSpan="3"
+                android:textSize="20sp"
                 android:text="入水质量" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="40dp"
+                android:layout_marginBottom="20dp"
                 android:layout_columnSpan="3"
-                android:text="入水质量" />
+                android:textSize="20sp"
+                android:text="出水质量" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
                 android:layout_columnSpan="1"
                 android:text="入水量" />
             <TextView
-                android:id="@+id/flowInEd"
+                android:id="@+id/flowInTv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
+                android:layout_marginStart="40dp"
+                android:layout_marginBottom="10dp"
                 android:layout_columnSpan="3"
                 android:ems="5" />
             <TextView
-                android:id="@+id/flowOutEd"
+                android:id="@+id/flowOutTv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
+                android:layout_marginStart="40dp"
+                android:layout_marginBottom="10dp"
+                android:layout_columnSpan="3"
+                android:ems="5" />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_columnSpan="1"
+                android:text="Ph值" />
+            <TextView
+                android:id="@+id/phInTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="40dp"
+                android:layout_marginBottom="10dp"
+                android:layout_columnSpan="3"
+                android:ems="5" />
+            <TextView
+                android:id="@+id/phOutTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="40dp"
+                android:layout_marginBottom="10dp"
                 android:layout_columnSpan="3"
                 android:ems="5" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
                 android:layout_columnSpan="1"
-                android:text="Ph" />
+                android:text="水温" />
             <TextView
-                android:id="@+id/waterTemperInEd"
+                android:id="@+id/waterTemperInTv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
+                android:layout_marginStart="40dp"
+                android:layout_marginBottom="10dp"
                 android:layout_columnSpan="3"
-                android:ems="10" />
+                android:ems="5" />
             <TextView
-                android:id="@+id/waterTemperOutEd"
+                android:id="@+id/waterTemperOutTv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
+                android:layout_marginStart="40dp"
+                android:layout_marginBottom="10dp"
                 android:layout_columnSpan="3"
-                android:ems="10" />
+                android:ems="5" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
                 android:layout_columnSpan="1"
-                android:text="Ph" />
+                android:text="浊度" />
+           <TextView
+                android:id="@+id/turbidityInTv"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_marginStart="40dp"
+               android:layout_marginBottom="10dp"
+               android:layout_columnSpan="3"
+               android:ems="5" />
             <TextView
-                android:id="@+id/phInEd"
+                android:id="@+id/turbidityOutTv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
+                android:layout_marginStart="40dp"
+                android:layout_marginBottom="10dp"
                 android:layout_columnSpan="3"
-                android:ems="10" />
-            <TextView
-                android:id="@+id/phOutEd"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_columnSpan="3"
-                android:ems="10" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_columnSpan="1"
-                android:text="Ph" />
-            <TextView
-                android:id="@+id/turbidityInEd"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_columnSpan="3"
-                android:ems="10" />
-            <TextView
-                android:id="@+id/turbidityOutEd"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_columnSpan="3"
-                android:ems="10" />
+                android:ems="5" />
 
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
                 android:layout_columnSpan="1"
-                android:text="Ph" />
+                android:text="氨氮" />
             <TextView
-                android:id="@+id/amlN2InEd"
+                android:id="@+id/amlN2InTv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
+                android:layout_marginStart="40dp"
+                android:layout_marginBottom="10dp"
                 android:layout_columnSpan="3"
-                android:inputType="numberDecimal"
-                android:ems="10" />
+                android:ems="5" />
             <TextView
-                android:id="@+id/amlN2OutEd"
+                android:id="@+id/amlN2OutTv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
+                android:layout_marginStart="40dp"
+                android:layout_marginBottom="10dp"
                 android:layout_columnSpan="3"
-                android:inputType="numberDecimal"
-                android:ems="10" />
+                android:ems="5" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
                 android:layout_columnSpan="1"
-                android:text="Ph" />
+                android:text="COD" />
             <TextView
-                android:id="@+id/codInEd"
+                android:id="@+id/codInTv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
+                android:layout_marginStart="40dp"
+                android:layout_marginBottom="10dp"
                 android:layout_columnSpan="3"
-                android:inputType="numberDecimal"
-                android:ems="10" />
+                android:ems="5" />
             <TextView
-                android:id="@+id/codOutEd"
+                android:id="@+id/codOutTv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
+                android:layout_marginStart="40dp"
+                android:layout_marginBottom="10dp"
                 android:layout_columnSpan="3"
-                android:inputType="numberDecimal"
-                android:ems="10" />
+                android:ems="5" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
                 android:layout_columnSpan="1"
-                android:text="Ph" />
+                android:text="TOC" />
             <TextView
-                android:id="@+id/tocInEd"
+                android:id="@+id/tocInTv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
+                android:layout_marginStart="40dp"
+                android:layout_marginBottom="10dp"
                 android:layout_columnSpan="3"
-                android:inputType="numberDecimal"
-                android:ems="10" />
+                android:ems="5" />
             <TextView
-                android:id="@+id/tocOutEd"
+                android:id="@+id/tocOutTv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
+                android:layout_marginStart="40dp"
+                android:layout_marginBottom="10dp"
                 android:layout_columnSpan="3"
-                android:inputType="numberDecimal"
-                android:ems="10" />
+                android:ems="5" />
 
         </GridLayout>
 
-
         <TextView
+            android:id="@+id/paramTv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_columnSpan="3"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="20dp"
+            android:textSize="20sp"
             android:text="参数" />
-
 
         <GridLayout
             android:id="@+id/zoomGridLayout"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:columnCount="4"
-            android:rowCount="8"
-            android:padding="5dp">
-
+            android:rowCount="1"
+            android:padding="20dp">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_columnSpan="1"
-                android:text="入水量" />
+                android:text="臭氧投加量" />
             <TextView
-                android:id="@+id/zoomAmountEd"
+                android:id="@+id/zoomAmountTv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
+                android:layout_marginStart="40dp"
+                android:layout_columnSpan="3"
+                android:ems="10" />
+        </GridLayout>
+
+        <GridLayout
+            android:id="@+id/chlorineGridLayout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:columnCount="4"
+            android:rowCount="1"
+            android:padding="20dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_columnSpan="1"
+                android:text="氯投加量" />
+            <TextView
+                android:id="@+id/chlorineAmountTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="40dp"
+                android:layout_columnSpan="3"
+                android:ems="10" />
+        </GridLayout>
+
+
+        <GridLayout
+            android:id="@+id/alumGridLayout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:columnCount="4"
+            android:rowCount="1"
+            android:padding="20dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_columnSpan="1"
+                android:text="矾投加量" />
+            <TextView
+                android:id="@+id/alumAmountTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="40dp"
                 android:layout_columnSpan="3"
                 android:ems="10" />
         </GridLayout>

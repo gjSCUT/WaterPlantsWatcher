@@ -5,7 +5,4 @@ package com.gjscut.waterplantswatcher.model;
  */
 
 public class DistributeWell extends Process {
-    public static String getType() {
-        return DistributeWell.class.toString();
-    }
 }

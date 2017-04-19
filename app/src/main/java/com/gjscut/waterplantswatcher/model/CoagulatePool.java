@@ -6,5 +6,4 @@ package com.gjscut.waterplantswatcher.model;
 
 public class CoagulatePool extends Process {
     public float alumAmount;
-    private final String type = CoagulatePool.class.toString();
 }

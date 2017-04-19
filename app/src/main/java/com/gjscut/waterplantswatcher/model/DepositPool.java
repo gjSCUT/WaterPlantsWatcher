@@ -5,7 +5,4 @@ package com.gjscut.waterplantswatcher.model;
  */
 
 public class DepositPool extends Process {
-    public static String getType() {
-        return DepositPool.class.toString();
-    }
 }

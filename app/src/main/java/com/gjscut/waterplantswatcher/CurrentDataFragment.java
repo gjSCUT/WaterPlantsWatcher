@@ -1,22 +1,37 @@
 package com.gjscut.waterplantswatcher;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.gjscut.waterplantswatcher.model.*;
+import com.gjscut.waterplantswatcher.model.ActivatedCarbonPool;
+import com.gjscut.waterplantswatcher.model.ChlorineAddPool;
+import com.gjscut.waterplantswatcher.model.CoagulatePool;
+import com.gjscut.waterplantswatcher.model.CombinedWell;
+import com.gjscut.waterplantswatcher.model.DepositPool;
+import com.gjscut.waterplantswatcher.model.DistributeWell;
+import com.gjscut.waterplantswatcher.model.OzonePoolAdvance;
+import com.gjscut.waterplantswatcher.model.OzonePoolMain;
 import com.gjscut.waterplantswatcher.model.Process;
+import com.gjscut.waterplantswatcher.model.PumpRoomFirst;
+import com.gjscut.waterplantswatcher.model.PumpRoomOut;
+import com.gjscut.waterplantswatcher.model.PumpRoomSecond;
+import com.gjscut.waterplantswatcher.model.SandLeachPool;
+import com.gjscut.waterplantswatcher.model.SuctionWell;
 
 import java.text.DecimalFormat;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import rx.Observable;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
@@ -28,32 +43,43 @@ import rx.schedulers.Schedulers;
 
 public class CurrentDataFragment extends Fragment {
     private ScheduledExecutorService service;
+    @BindView(R.id.phInTv) TextView phInTv;
+    @BindView(R.id.waterTemperInTv) TextView waterTemperInTv;
+    @BindView(R.id.turbidityInTv) TextView turbidityInTv;
+    @BindView(R.id.amlN2InTv) TextView amlN2InTv;
+    @BindView(R.id.codInTv) TextView codInTv;
+    @BindView(R.id.tocInTv) TextView tocInTv;
+    @BindView(R.id.flowInTv) TextView flowInTv;
+    @BindView(R.id.phOutTv) TextView phOutTv;
+    @BindView(R.id.waterTemperOutTv) TextView waterTemperOutTv;
+    @BindView(R.id.turbidityOutTv) TextView turbidityOutTv;
+    @BindView(R.id.amlN2OutTv) TextView amlN2OutTv;
+    @BindView(R.id.codOutTv) TextView codOutTv;
+    @BindView(R.id.tocOutTv) TextView tocOutTv;
+    @BindView(R.id.flowOutTv) TextView flowOutTv;
+
+    @BindView(R.id.paramTv) View paramTv;
+    @BindView(R.id.zoomAmountTv) View zoomAmountTv;
+    @BindView(R.id.alumAmountTv) View alumAmountTv;
+    @BindView(R.id.chlorineAmountTv) View chlorineAmountTv;
+    @BindView(R.id.zoomGridLayout) View zoomGridLayout;
+    @BindView(R.id.alumGridLayout) View alumGridLayout;
+    @BindView(R.id.chlorineGridLayout) View chlorineGridLayout;
     private String type;
-    private TextView phInTv;
-    private TextView waterTemperInTv;
-    private TextView turbidityInTv;
-    private TextView amlN2InTv;
-    private TextView codInTv;
-    private TextView tocInTv;
-    private TextView flowInTv;
-    private TextView phOutTv;
-    private TextView waterTemperOutTv;
-    private TextView turbidityOutTv;
-    private TextView amlN2OutTv;
-    private TextView codOutTv;
-    private TextView tocOutTv;
-    private TextView flowOutTv;
-    private TextView zoneAmount;
-    private TextView chlorineAmount;
-    private TextView alumAmount;
+    private Map<String, Pair<View, View>> classGridTextMap;
+
     public CurrentDataFragment() {
         service = Executors.newSingleThreadScheduledExecutor();
-
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        type = getArguments().getString("type");
+        classGridTextMap.put(OzonePoolMain.class.toString(), new Pair<>(zoomGridLayout, zoomAmountTv));
+        classGridTextMap.put(OzonePoolAdvance.class.toString(), new Pair<>(zoomGridLayout, zoomAmountTv));
+        classGridTextMap.put(ChlorineAddPool.class.toString(), new Pair<>(chlorineGridLayout, chlorineAmountTv));
+        classGridTextMap.put(CoagulatePool.class.toString(), new Pair<>(chlorineGridLayout, chlorineAmountTv));
         final DecimalFormat decimalFormat = new DecimalFormat(".000");
         service.scheduleAtFixedRate(new Runnable() {
             @Override
@@ -116,33 +142,44 @@ public class CurrentDataFragment extends Fragment {
                                 flowOutTv.setText(decimalFormat.format(p.flowOut));
                                 try {
 
-                                    if (type.equals(ActivatedCarbonPool.class)) {
-                                        p = (ActivatedCarbonPool) p;
-
-                                    } else if (type.equals(ChlorineAddPool.class)) {
-                                        p = (ChlorineAddPool) p;
-                                    } else if (type.equals(CoagulatePool.class)) {
-                                        p = (CoagulatePool) p;
-                                    } else if (type.equals(CombinedWell.class)) {
-                                        p = (CombinedWell) p;
-                                    } else if (type.equals(DepositPool.class)) {
-                                        p = (DepositPool) p;
-                                    } else if (type.equals(DistributeWell.class)) {
-                                        p = (DistributeWell) p;
-                                    } else if (type.equals(OzonePoolAdvance.class)) {
-                                        p = (OzonePoolAdvance) p;
-                                    } else if (type.equals(OzonePoolMain.class)) {
-                                        p = (OzonePoolMain) p;
-                                    } else if (type.equals(PumpRoomFirst.class)) {
-                                        p = (PumpRoomFirst) p;
-                                    } else if (type.equals(PumpRoomSecond.class)) {
-                                        p = (PumpRoomSecond) p;
-                                    } else if (type.equals(PumpRoomOut.class)) {
-                                        p = (PumpRoomOut) p;
-                                    } else if (type.equals(SandLeachPool.class)) {
-                                        p = (SandLeachPool) p;
-                                    } else if (type.equals(SuctionWell.class)) {
-                                        p = (SuctionWell) p;
+                                    Iterator<String> iterator = classGridTextMap.keySet().iterator();
+                                    boolean isShow = false;
+                                    while(iterator.hasNext()) {
+                                        String className = iterator.next();
+                                        if (type.equals(className)) {
+                                            isShow = true;
+                                            classGridTextMap.get(className).first.setVisibility(View.VISIBLE);
+                                            if (type.equals(ChlorineAddPool.class)) {
+                                                ChlorineAddPool chlorineAddPool = (ChlorineAddPool) p;
+                                                ((TextView) classGridTextMap.get(className).second)
+                                                        .setText(decimalFormat.format(chlorineAddPool.chlorineAmount));
+                                            } else if (type.equals(CoagulatePool.class)) {
+                                                CoagulatePool coagulatePool = (CoagulatePool) p;
+                                                ((TextView) classGridTextMap.get(className).second)
+                                                        .setText(decimalFormat.format(coagulatePool.alumAmount));
+                                            } else if (type.equals(OzonePoolAdvance.class)) {
+                                                OzonePoolAdvance ozonePoolAdvance = (OzonePoolAdvance) p;
+                                                ((TextView) classGridTextMap.get(className).second)
+                                                        .setText(decimalFormat.format(ozonePoolAdvance.zoneAmount));
+                                            } else if (type.equals(OzonePoolMain.class)) {
+                                                OzonePoolMain ozonePoolMain = (OzonePoolMain) p;
+                                                ((TextView) classGridTextMap.get(className).second)
+                                                        .setText(decimalFormat.format(ozonePoolMain.zoneAmount));
+                                            } else if (type.equals(PumpRoomFirst.class)) {
+                                                PumpRoomFirst pumpRoomFirst = (PumpRoomFirst) p;
+                                            } else if (type.equals(PumpRoomSecond.class)) {
+                                                PumpRoomSecond pumpRoomSecond = (PumpRoomSecond) p;
+                                            } else if (type.equals(PumpRoomOut.class)) {
+                                                PumpRoomOut pumpRoomOut = (PumpRoomOut) p;
+                                            }
+                                        } else {
+                                            classGridTextMap.get(className).first.setVisibility(View.GONE);
+                                        }
+                                    }
+                                    if (isShow) {
+                                        paramTv.setVisibility(View.GONE);
+                                    } else {
+                                        paramTv.setVisibility(View.VISIBLE);
                                     }
                                 } catch (ClassCastException e) {
                                     e.printStackTrace();
@@ -161,24 +198,9 @@ public class CurrentDataFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-
-        phInTv = (TextView) container.findViewById(R.id.phInTv);
-        waterTemperInTv = (TextView) container.findViewById(R.id.waterTemperInTv);
-        turbidityInTv = (TextView) container.findViewById(R.id.turbidityInTv);
-        amlN2InTv = (TextView) container.findViewById(R.id.amlN2InTv);
-        codInTv = (TextView) container.findViewById(R.id.codInTv);
-        tocInTv = (TextView) container.findViewById(R.id.tocInTv);
-        flowInTv = (TextView) container.findViewById(R.id.flowInTv);
-        phOutTv = (TextView) container.findViewById(R.id.phOutTv);
-        waterTemperOutTv = (TextView) container.findViewById(R.id.phInEd);
-        turbidityOutTv = (TextView) container.findViewById(R.id.phInEd);
-        amlN2OutTv = (TextView) container.findViewById(R.id.phInEd);
-        codOutTv = (TextView) container.findViewById(R.id.phInEd);
-        tocOutTv = (TextView) container.findViewById(R.id.phInEd);
-        flowOutTv = (TextView) container.findViewById(R.id.phInEd);
-        zoneAmount = (TextView) container.findViewById(R.id.phInEd);
-        chlorineAmount = (TextView) container.findViewById(R.id.phInEd);
-        alumAmount = (TextView) container.findViewById(R.id.phInEd);
-        return inflater.inflate(R.layout.fragment_current_data, container, false);
+        View view = inflater.inflate(R.layout.fragment_current_data, container, false);
+        ButterKnife.bind(this, view);
+        // TODO Use fields...
+        return view;
     }
 }

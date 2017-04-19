@@ -154,7 +154,7 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onCompleted() {
                         showProgress(false);
-                        Intent intent = new Intent(LoginActivity.this, DataActivity.class);
+                        Intent intent = new Intent(LoginActivity.this, ProcessesActivity.class);
                         startActivity(intent);
                         finish();
                     }

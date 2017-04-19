@@ -11,14 +11,14 @@ import android.view.ViewGroup;
  */
 
 public class HistoryDataFragment extends Fragment {
-
+    private String type;
     public HistoryDataFragment() {
-        // Required empty public constructor
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        type = getArguments().getString("type");
     }
 
     @Override
