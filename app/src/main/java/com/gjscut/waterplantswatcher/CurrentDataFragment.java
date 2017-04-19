@@ -29,20 +29,23 @@ import rx.schedulers.Schedulers;
 public class CurrentDataFragment extends Fragment {
     private ScheduledExecutorService service;
     private String type;
-    public TextView phInTv;
-    public TextView waterTemperInTv;
-    public TextView turbidityInTv;
-    public TextView amlN2InTv;
-    public TextView codInTv;
-    public TextView tocInTv;
-    public TextView flowInTv;
-    public TextView phOutTv;
-    public TextView waterTemperOutTv;
-    public TextView turbidityOutTv;
-    public TextView amlN2OutTv;
-    public TextView codOutTv;
-    public TextView tocOutTv;
-    public TextView flowOutTv;
+    private TextView phInTv;
+    private TextView waterTemperInTv;
+    private TextView turbidityInTv;
+    private TextView amlN2InTv;
+    private TextView codInTv;
+    private TextView tocInTv;
+    private TextView flowInTv;
+    private TextView phOutTv;
+    private TextView waterTemperOutTv;
+    private TextView turbidityOutTv;
+    private TextView amlN2OutTv;
+    private TextView codOutTv;
+    private TextView tocOutTv;
+    private TextView flowOutTv;
+    private TextView zoneAmount;
+    private TextView chlorineAmount;
+    private TextView alumAmount;
     public CurrentDataFragment() {
         service = Executors.newSingleThreadScheduledExecutor();
 
@@ -115,7 +118,7 @@ public class CurrentDataFragment extends Fragment {
 
                                     if (type.equals(ActivatedCarbonPool.class)) {
                                         p = (ActivatedCarbonPool) p;
-                                        
+
                                     } else if (type.equals(ChlorineAddPool.class)) {
                                         p = (ChlorineAddPool) p;
                                     } else if (type.equals(CoagulatePool.class)) {
@@ -158,6 +161,24 @@ public class CurrentDataFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
+        phInTv = (TextView) container.findViewById(R.id.phInTv);
+        waterTemperInTv = (TextView) container.findViewById(R.id.waterTemperInTv);
+        turbidityInTv = (TextView) container.findViewById(R.id.turbidityInTv);
+        amlN2InTv = (TextView) container.findViewById(R.id.amlN2InTv);
+        codInTv = (TextView) container.findViewById(R.id.codInTv);
+        tocInTv = (TextView) container.findViewById(R.id.tocInTv);
+        flowInTv = (TextView) container.findViewById(R.id.flowInTv);
+        phOutTv = (TextView) container.findViewById(R.id.phOutTv);
+        waterTemperOutTv = (TextView) container.findViewById(R.id.phInEd);
+        turbidityOutTv = (TextView) container.findViewById(R.id.phInEd);
+        amlN2OutTv = (TextView) container.findViewById(R.id.phInEd);
+        codOutTv = (TextView) container.findViewById(R.id.phInEd);
+        tocOutTv = (TextView) container.findViewById(R.id.phInEd);
+        flowOutTv = (TextView) container.findViewById(R.id.phInEd);
+        zoneAmount = (TextView) container.findViewById(R.id.phInEd);
+        chlorineAmount = (TextView) container.findViewById(R.id.phInEd);
+        alumAmount = (TextView) container.findViewById(R.id.phInEd);
         return inflater.inflate(R.layout.fragment_current_data, container, false);
     }
 }
