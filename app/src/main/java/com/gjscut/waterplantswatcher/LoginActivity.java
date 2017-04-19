@@ -3,6 +3,7 @@ package com.gjscut.waterplantswatcher;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -153,6 +154,8 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onCompleted() {
                         showProgress(false);
+                        Intent intent = new Intent(LoginActivity.this, DataActivity.class);
+                        startActivity(intent);
                         finish();
                     }
                 });
