@@ -18,11 +18,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
+        <Spinner
+            android:id="@+id/historySpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
         <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/historyChart"
+            android:layout_below="@id/historySpinner"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-
+            android:layout_height="wrap_content"/>
     </RelativeLayout>
 
 </RelativeLayout>

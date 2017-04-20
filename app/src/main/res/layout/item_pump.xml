@@ -12,26 +12,26 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="Order" />
+        android:text="水泵序号" />
     <TextView
         android:id="@+id/item_pump_frequency"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="Frequency" />
+        android:text="频率" />
     <TextView
         android:id="@+id/item_pump_flow"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="head" />
+        android:text="扬程" />
     <TextView
         android:id="@+id/item_pump_head"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="flow" />
+        android:text="流量" />
 </LinearLayout>

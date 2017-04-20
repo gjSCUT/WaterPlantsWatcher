@@ -66,7 +66,7 @@ public class ProcessesActivity extends AppCompatActivity {
         initData();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        setTitle("Processes");
+        setTitle("水处理流程");
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         final RecyclerView.Adapter mAdapter = new ProcessAdapter();
         mRecyclerView.setAdapter(mAdapter);

@@ -9,6 +9,7 @@ import com.gjscut.waterplantswatcher.model.Token;
 import java.io.IOException;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Logger;
 
 import okhttp3.Authenticator;
 import okhttp3.Interceptor;
@@ -21,6 +22,7 @@ import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class NetHelper {
+    private static final Logger logger = Logger.getLogger("NetHelper");
     public static NetHelper mInstance;
     public static IApi mApi;
     public static final String BASE_URL = "http://121.196.207.208:3000/";
@@ -34,10 +36,12 @@ public class NetHelper {
             @Override public Response intercept(Chain chain) throws IOException {
                 Request originalRequest = chain.request();
                 String path = originalRequest.url().encodedPath();
-                if (Constant.token == null || originalRequest.header("Authorization") != null || !path.contains("api")) {
+                if (Constant.token == null || originalRequest.header("Authorization") != null || !path.startsWith("/api")) {
+                    logger.info("Don't need Authorization");
                     return chain.proceed(originalRequest);
                 }
                 String sToken = Constant.token.token_type + " " + Constant.token.access_token;
+                logger.info("Authorization = " + sToken);
                 Request authorised = originalRequest.newBuilder()
                         .header("Authorization", sToken)
                         .build();
@@ -49,6 +53,7 @@ public class NetHelper {
                     throws IOException {
                 editor = NetHelper.context.getSharedPreferences("water_plants", Context.MODE_PRIVATE).edit();
                 if (Constant.token == null || Constant.token.refresh_token.isEmpty()) {
+                    logger.info("No refresh token");
                     Intent intent = new Intent(NetHelper.context, LoginActivity.class);
                     context.startActivity(intent);
                     editor.putString("accessToken", "");
@@ -65,6 +70,7 @@ public class NetHelper {
                     if (tokenResponse.isSuccessful()) {
                         Constant.token = tokenResponse.body();
                     } else {
+                        logger.info("refresh execute failure");
                         Intent intent = new Intent(NetHelper.context, LoginActivity.class);
                         context.startActivity(intent);
                         editor.putString("accessToken", "");
@@ -76,6 +82,7 @@ public class NetHelper {
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
+                    logger.info("refresh execute error");
                     return null;
                 }
                 editor.putLong("loginTime", new Date().getTime());
@@ -86,6 +93,7 @@ public class NetHelper {
                 editor.apply();
 
                 String sToken = Constant.token.token_type + " " + Constant.token.access_token;
+                logger.info("new Authorization = " + sToken);
                 return response.request().newBuilder()
                         .addHeader("Authorization", sToken)
                         .build();
@@ -93,7 +101,9 @@ public class NetHelper {
         };
         OkHttpClient client = new OkHttpClient.Builder()
                 .retryOnConnectionFailure(true)
-                .connectTimeout(15, TimeUnit.SECONDS)
+                .connectTimeout(30, TimeUnit.SECONDS)
+                .readTimeout(30, TimeUnit.SECONDS)
+                .writeTimeout(30, TimeUnit.SECONDS)
                 .authenticator(mAuthenticator)
                 .addNetworkInterceptor(mTokenInterceptor)
                 .build();

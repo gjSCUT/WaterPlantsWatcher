@@ -181,16 +181,18 @@ public class CurrentDataFragment extends Fragment {
                             @Override
                             public void onError(Throwable e) {
                                 e.printStackTrace();
+                                logger.info(type + " get current result error ");
+                                if (e instanceof SocketTimeoutException) {
+                                    service.shutdown();
+                                    mFormView.setVisibility(View.GONE);
+                                    mProgressView.setVisibility(View.GONE);
+                                    mErrorView.setVisibility(View.VISIBLE);
+                                    return;
+                                }
                                 if (isFirst) {
                                     isFirst = false;
                                     showProgress(false);
                                 }
-                                if (e instanceof SocketTimeoutException) {
-                                    service.shutdown();
-                                }
-                                mErrorView.setVisibility(View.VISIBLE);
-                                mFormView.setVisibility(View.GONE);
-                                mProgressView.setVisibility(View.GONE);
                             }
 
                             @Override

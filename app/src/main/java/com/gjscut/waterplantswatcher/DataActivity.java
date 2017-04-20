@@ -14,34 +14,12 @@ import android.view.MenuItem;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
-import com.gjscut.waterplantswatcher.model.ActivatedCarbonPool;
-import com.gjscut.waterplantswatcher.model.ChlorineAddPool;
-import com.gjscut.waterplantswatcher.model.CoagulatePool;
-import com.gjscut.waterplantswatcher.model.CombinedWell;
-import com.gjscut.waterplantswatcher.model.DepositPool;
-import com.gjscut.waterplantswatcher.model.DistributeWell;
-import com.gjscut.waterplantswatcher.model.OzonePoolAdvance;
-import com.gjscut.waterplantswatcher.model.OzonePoolMain;
-import com.gjscut.waterplantswatcher.model.Process;
-import com.gjscut.waterplantswatcher.model.PumpRoomFirst;
-import com.gjscut.waterplantswatcher.model.PumpRoomOut;
-import com.gjscut.waterplantswatcher.model.PumpRoomSecond;
-import com.gjscut.waterplantswatcher.model.SandLeachPool;
-import com.gjscut.waterplantswatcher.model.SuctionWell;
 
-import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 import butterknife.ButterKnife;
-import rx.Observable;
-import rx.Observer;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 
 public class DataActivity extends AppCompatActivity {
@@ -223,8 +201,8 @@ public class DataActivity extends AppCompatActivity {
         historyDataFragment = new HistoryDataFragment();
         currentDataFragment.setArguments(args);
         historyDataFragment.setArguments(args);
-        adapter.addFragment(currentDataFragment, "Current Data");
-        adapter.addFragment(historyDataFragment, "History Data");
+        adapter.addFragment(currentDataFragment, "实时数据");
+        adapter.addFragment(historyDataFragment, "历史统计");
         viewPager.setAdapter(adapter);
     }
 
