@@ -142,12 +142,6 @@ public class HistoryDataFragment extends Fragment implements OnChartValueSelecte
         l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
         l.setDrawInside(true);
 
-        getHistoryDates();
-        return view;
-    }
-
-    private void getHistoryDates() {
-        Observable observable = null;
         List<String> spinnerList = new ArrayList<>();
         Iterator<String> iterator = fieldMap.keySet().iterator();
         while(iterator.hasNext()) {
@@ -155,6 +149,33 @@ public class HistoryDataFragment extends Fragment implements OnChartValueSelecte
             if (fieldMap.get(key).size() == 2)
                 spinnerList.add(key);
         }
+
+        if (!spinnerList.isEmpty())
+            field = spinnerList.get(0);
+        ArrayAdapter<String> arrAdapter= new ArrayAdapter<>(mContext, android.R.layout.simple_spinner_item, spinnerList);
+        arrAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mSpinner.setAdapter(arrAdapter);
+        mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view,
+                                       int position, long id) {
+                Spinner spinner=(Spinner) parent;
+                field = spinner.getItemAtPosition(position).toString();
+                getHistoryDates();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                field = null;
+            }
+
+        });
+        return view;
+    }
+
+    private void getHistoryDates() {
+        Observable observable = null;
 
         if (type.equals(ActivatedCarbonPool.class.toString())) {
             observable = NetHelper.api(mContext).getActivatedCarbonPool(8640, "-createTime");
@@ -189,27 +210,6 @@ public class HistoryDataFragment extends Fragment implements OnChartValueSelecte
         } else {
             logger.warning("type error");
         }
-        if (!spinnerList.isEmpty())
-            field = spinnerList.get(0);
-        ArrayAdapter<String> arrAdapter= new ArrayAdapter<>(mContext, android.R.layout.simple_spinner_item, spinnerList);
-        arrAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mSpinner.setAdapter(arrAdapter);
-        mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view,
-                                       int position, long id) {
-                Spinner spinner=(Spinner) parent;
-                field = spinner.getItemAtPosition(position).toString();
-                getHistoryDates();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                field = null;
-            }
-
-        });
 
         if (observable != null) {
             showProgress(true);

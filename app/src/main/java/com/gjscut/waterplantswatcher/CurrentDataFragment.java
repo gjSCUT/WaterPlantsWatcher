@@ -97,7 +97,7 @@ public class CurrentDataFragment extends Fragment {
     private boolean isFirst;
 
     public CurrentDataFragment() {
-        service = Executors.newSingleThreadScheduledExecutor();
+
     }
 
     @Override
@@ -183,7 +183,7 @@ public class CurrentDataFragment extends Fragment {
                                 e.printStackTrace();
                                 logger.info(type + " get current result error ");
                                 if (e instanceof SocketTimeoutException) {
-                                    service.shutdown();
+                                    service.shutdownNow();
                                     mFormView.setVisibility(View.GONE);
                                     mProgressView.setVisibility(View.GONE);
                                     mErrorView.setVisibility(View.VISIBLE);
@@ -221,13 +221,14 @@ public class CurrentDataFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+        service = Executors.newSingleThreadScheduledExecutor();
         getRealTimeDates();
     }
     
     @Override
     public void onStop() {
         super.onStop();
-        service.shutdown();
+        service.shutdownNow();
     }
     
     public void handleNext(Process p) {
