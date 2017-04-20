@@ -4,7 +4,28 @@
     android:layout_height="match_parent"
     tools:context=".CurrentDataFragment">
 
+    <ProgressBar
+        android:id="@+id/processes_progress"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="60dp"
+        android:visibility="gone" />
+
+
+    <TextView
+        android:id="@+id/processes_error"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:text="Connect to server timeout"
+        android:visibility="gone" />
+
     <LinearLayout
+        android:id="@+id/processes_form"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:orientation="vertical" >
@@ -277,5 +298,57 @@
                 android:layout_columnSpan="3"
                 android:ems="10" />
         </GridLayout>
+
+
+        <GridLayout
+            android:id="@+id/pumpGridLayout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:columnCount="4"
+            android:rowCount="2"
+            android:padding="20dp">
+
+
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:orientation="horizontal"
+                android:layout_columnSpan="4"
+                android:paddingTop="20dp"
+                android:paddingBottom="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="Pump Order" />
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="Frequency" />
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="head" />
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="flow" />
+            </LinearLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/pump_list"
+                android:layout_columnSpan="4"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </GridLayout>
+
     </LinearLayout>
 </RelativeLayout>

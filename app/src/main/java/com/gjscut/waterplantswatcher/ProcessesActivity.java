@@ -1,16 +1,16 @@
 package com.gjscut.waterplantswatcher;
 
+import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.Rect;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 
 public class ProcessesActivity extends AppCompatActivity {
@@ -61,37 +62,56 @@ public class ProcessesActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_processes);
+        ButterKnife.bind(this);
         initData();
-
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        setTitle("Processes");
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        final RecyclerView.Adapter mAdapter = new HomeAdapter();
+        final RecyclerView.Adapter mAdapter = new ProcessAdapter();
         mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST));
+    }
 
-        final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        paint.setFilterBitmap(true);
-        paint.setDither(true);
-        final Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.arrow_down);
-        final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
-        mRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
-            @Override
-            public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
-                super.onDraw(c, parent, state);
-                c.drawBitmap(bitmap, rect, rect, paint);
-            }
-        });
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.process_menu, menu);
+        return true;
+    }
+    //and this to handle actions
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+        if (id == R.id.action_logout) {
+            SharedPreferences.Editor editor = getSharedPreferences("water_plants", Context.MODE_PRIVATE).edit();
+            editor.putString("accessToken", "");
+            editor.putString("tokenType", "");
+            editor.putString("refreshToken", "");
+            editor.putInt("expiresIn", 0);
+            editor.apply();
+            Intent intent = new Intent(ProcessesActivity.this, LoginActivity.class);
+            startActivity(intent);
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     class ProcessItem {
-        public String name;
-        public Class className;
+        String name;
+        Class className;
 
-        public ProcessItem(String name, Class className) {
+        ProcessItem(String name, Class className) {
             this.name = name;
             this.className = className;
         }
     }
 
-    class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.MyViewHolder> {
+    class ProcessAdapter extends RecyclerView.Adapter<ProcessAdapter.MyViewHolder> {
 
         @Override
         public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -105,6 +125,7 @@ public class ProcessesActivity extends AppCompatActivity {
                     int position = holder.getLayoutPosition();
                     Intent intent = new Intent(ProcessesActivity.this, DataActivity.class);
                     intent.putExtra("type", mDatas.get(position).className.toString());
+                    intent.putExtra("title", mDatas.get(position).name);
                     startActivity(intent);
                 }
             });
@@ -124,7 +145,7 @@ public class ProcessesActivity extends AppCompatActivity {
         class MyViewHolder extends RecyclerView.ViewHolder {
             TextView tv;
 
-            public MyViewHolder(View view) {
+            MyViewHolder(View view) {
                 super(view);
                 tv = (TextView) view.findViewById(R.id.item_process_name);
             }

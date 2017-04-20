@@ -1,6 +1,13 @@
 package com.gjscut.waterplantswatcher;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+
+import com.gjscut.waterplantswatcher.model.Token;
+
 import java.io.IOException;
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Authenticator;
@@ -16,13 +23,18 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class NetHelper {
     public static NetHelper mInstance;
     public static IApi mApi;
-    public Retrofit mRetrofit;
     public static final String BASE_URL = "http://121.196.207.208:3000/";
+
+    private static Context context;
+    private Retrofit mRetrofit;
+    private SharedPreferences.Editor editor;
+
     private NetHelper(){
         Interceptor mTokenInterceptor = new Interceptor() {
             @Override public Response intercept(Chain chain) throws IOException {
                 Request originalRequest = chain.request();
-                if (Constant.token == null || originalRequest.header("Authorization") != null) {
+                String path = originalRequest.url().encodedPath();
+                if (Constant.token == null || originalRequest.header("Authorization") != null || !path.contains("api")) {
                     return chain.proceed(originalRequest);
                 }
                 String sToken = Constant.token.token_type + " " + Constant.token.access_token;
@@ -35,13 +47,44 @@ public class NetHelper {
         Authenticator mAuthenticator = new Authenticator() {
             @Override public Request authenticate(Route route, Response response)
                     throws IOException {
-                if (Constant.token == null) {
-                    return response.request().newBuilder()
-                            .build();
+                editor = NetHelper.context.getSharedPreferences("water_plants", Context.MODE_PRIVATE).edit();
+                if (Constant.token == null || Constant.token.refresh_token.isEmpty()) {
+                    Intent intent = new Intent(NetHelper.context, LoginActivity.class);
+                    context.startActivity(intent);
+                    editor.putString("accessToken", "");
+                    editor.putString("tokenType", "");
+                    editor.putString("refreshToken", "");
+                    editor.putInt("expiresIn", 0);
+                    editor.apply();
+                    return null;
                 }
-                Constant.token = api().accessTokenByRefresh("refresh_token", Constant.token.refresh_token, Constant.clientId, Constant.clientSecret)
-                        .execute()
-                        .body();
+                try {
+                    retrofit2.Response<Token> tokenResponse = api(NetHelper.context)
+                            .accessTokenByRefresh("refresh_token", Constant.token.refresh_token, Constant.clientId, Constant.clientSecret)
+                            .execute();
+                    if (tokenResponse.isSuccessful()) {
+                        Constant.token = tokenResponse.body();
+                    } else {
+                        Intent intent = new Intent(NetHelper.context, LoginActivity.class);
+                        context.startActivity(intent);
+                        editor.putString("accessToken", "");
+                        editor.putString("tokenType", "");
+                        editor.putString("refreshToken", "");
+                        editor.putInt("expiresIn", 0);
+                        editor.apply();
+                        return null;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return null;
+                }
+                editor.putLong("loginTime", new Date().getTime());
+                editor.putString("accessToken", Constant.token.access_token);
+                editor.putString("tokenType", Constant.token.token_type);
+                editor.putString("refreshToken", Constant.token.refresh_token);
+                editor.putInt("expiresIn", Constant.token.expires_in);
+                editor.apply();
+
                 String sToken = Constant.token.token_type + " " + Constant.token.access_token;
                 return response.request().newBuilder()
                         .addHeader("Authorization", sToken)
@@ -72,7 +115,8 @@ public class NetHelper {
         return mInstance;
     }
 
-    public static IApi api() {
+    public static IApi api(Context context) {
+        NetHelper.context = context;
         if(mApi == null){
             synchronized (NetHelper.class){
                 if(mApi == null)

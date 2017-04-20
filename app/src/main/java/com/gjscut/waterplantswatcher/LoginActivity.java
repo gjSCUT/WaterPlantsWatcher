@@ -3,7 +3,9 @@ package com.gjscut.waterplantswatcher;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -15,6 +17,10 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import com.gjscut.waterplantswatcher.model.Token;
+
+import java.util.Date;
 
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
@@ -31,9 +37,25 @@ public class LoginActivity extends AppCompatActivity {
     private View mProgressView;
     private View mLoginFormView;
 
+    SharedPreferences.Editor editor;
+    SharedPreferences read;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        editor = getSharedPreferences("water_plants", Context.MODE_PRIVATE).edit();
+        read = getSharedPreferences("water_plants", Context.MODE_PRIVATE);
+        long date = read.getLong("loginTime", 0L);
+        String access_token = read.getString("accessToken", "");
+        String token_type = read.getString("tokenType", "");
+        String refresh_token = read.getString("refreshToken", "");
+        int expires_in = read.getInt("expiresIn", 0);
+        Constant.token = new Token(token_type, access_token, refresh_token, expires_in);
+        if (!access_token.isEmpty() && new Date().getTime() - date < 1000 * Constant.token.expires_in * 24) {
+            Intent intent = new Intent(LoginActivity.this, ProcessesActivity.class);
+            startActivity(intent);
+            finish();
+        }
         setContentView(R.layout.activity_login);
         this.setTitle("Login");
         // Set up the login form.
@@ -110,7 +132,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void login(final String username, final String password) {
         showProgress(true);
-        NetHelper.api().login(username, password)
+        NetHelper.api(this).login(username, password)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<String>() {
@@ -134,14 +156,20 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void accessToken(final String username, final String password) {
-        NetHelper.api().accessTokenByPassword("password", Constant.clientId, Constant.clientSecret, username, password)
+        NetHelper.api(this).accessTokenByPassword("password", Constant.clientId, Constant.clientSecret, username, password)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<Constant.Token>() {
+                .subscribe(new Observer<Token>() {
 
                     @Override
-                    public void onNext(Constant.Token value) {
+                    public void onNext(Token value) {
                         Constant.token = value;
+                        editor.putLong("loginTime", new Date().getTime());
+                        editor.putString("accessToken", Constant.token.access_token);
+                        editor.putString("tokenType", Constant.token.token_type);
+                        editor.putString("refreshToken", Constant.token.refresh_token);
+                        editor.putInt("expiresIn", Constant.token.expires_in);
+                        editor.apply();
                     }
 
                     @Override
