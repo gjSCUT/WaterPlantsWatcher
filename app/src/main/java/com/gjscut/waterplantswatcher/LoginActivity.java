@@ -50,8 +50,9 @@ public class LoginActivity extends AppCompatActivity {
         String token_type = read.getString("tokenType", "");
         String refresh_token = read.getString("refreshToken", "");
         int expires_in = read.getInt("expiresIn", 0);
-        Constant.token = new Token(token_type, access_token, refresh_token, expires_in);
-        if (!access_token.isEmpty() && new Date().getTime() - date < 1000 * Constant.token.expires_in * 24) {
+        Token token = new Token(token_type, access_token, refresh_token, expires_in);
+        Constant.putToken(token);
+        if (!token.access_token.isEmpty() && new Date().getTime() - date < 1000 * token.expires_in * 24) {
             Intent intent = new Intent(LoginActivity.this, ProcessesActivity.class);
             startActivity(intent);
             finish();
