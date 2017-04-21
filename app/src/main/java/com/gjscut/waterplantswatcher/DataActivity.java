@@ -57,12 +57,6 @@ public class DataActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.line, menu);
-        return true;
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         LineChart mChart = historyDataFragment.mChart;
         switch (item.getItemId()) {

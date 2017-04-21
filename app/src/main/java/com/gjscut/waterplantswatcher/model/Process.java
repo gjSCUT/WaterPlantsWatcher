@@ -16,4 +16,6 @@ public class Process {
     public float codOut;
     public float tocOut;
     public float flowOut;
+    public String createTime;
+    public String updateTIme;
 }

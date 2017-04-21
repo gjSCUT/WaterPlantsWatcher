@@ -10,10 +10,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ProgressBar;
-import android.widget.Spinner;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
@@ -39,10 +36,14 @@ import com.gjscut.waterplantswatcher.model.PumpRoomOut;
 import com.gjscut.waterplantswatcher.model.PumpRoomSecond;
 import com.gjscut.waterplantswatcher.model.SandLeachPool;
 import com.gjscut.waterplantswatcher.model.SuctionWell;
+import com.jaredrummler.materialspinner.MaterialSpinner;
 
 import java.lang.reflect.Field;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -59,11 +60,15 @@ import rx.schedulers.Schedulers;
 
 public class HistoryDataFragment extends Fragment implements OnChartValueSelectedListener {
     private final Logger logger = Logger.getLogger("HistoryDataFragment");
+    SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    SimpleDateFormat formatter = new SimpleDateFormat("HH");
     private Unbinder unbinder;
     private Context mContext;
     private String type;
     private String field;
     private Map<String, List<Field>> fieldMap = new HashMap<>();
+    private boolean isFirst = true;
+    private List<Process> processList;
 
     @BindView(R.id.processes_progress)
     ProgressBar mProgressView;
@@ -71,7 +76,8 @@ public class HistoryDataFragment extends Fragment implements OnChartValueSelecte
     View mFormView;
 
     @BindView(R.id.historyChart) LineChart mChart;
-    @BindView(R.id.historySpinner) Spinner mSpinner;
+    @BindView(R.id.historySpinner)
+    MaterialSpinner mSpinner;
 
     public HistoryDataFragment() {
     }
@@ -80,6 +86,12 @@ public class HistoryDataFragment extends Fragment implements OnChartValueSelecte
     public void onAttach(Context context){
         super.onAttach(context);
         this.mContext = context;
+    }
+
+    @Override
+    public void onDetach(){
+        super.onDetach();
+        this.mContext = null;
     }
 
     @Override
@@ -122,61 +134,63 @@ public class HistoryDataFragment extends Fragment implements OnChartValueSelecte
         mChart.getDescription().setEnabled(false);
         mChart.setDrawBorders(false);
         mChart.getAxisLeft().setEnabled(true);
-        mChart.getAxisLeft().setDrawAxisLine(true);
+        mChart.getAxisLeft().setDrawAxisLine(false);
         mChart.getAxisLeft().setDrawGridLines(true);
         mChart.getAxisRight().setEnabled(false);
-        mChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM_INSIDE);
+        mChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
         mChart.getXAxis().setDrawAxisLine(false);
         mChart.getXAxis().setDrawGridLines(false);
+        mChart.getXAxis().setDrawLabels(false);
         // enable touch gestures
         mChart.setTouchEnabled(true);
         // enable scaling and dragging
         mChart.setDragEnabled(true);
         mChart.setScaleEnabled(true);
         // if disabled, scaling can be done on x- and y-axis separately
-        mChart.setPinchZoom(false);
+        mChart.setPinchZoom(true);
+        mChart.setAutoScaleMinMaxEnabled(true);
 
         Legend l = mChart.getLegend();
         l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
         l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
         l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
-        l.setDrawInside(true);
+        l.setDrawInside(false);
+        l.setYEntrySpace(10);
+        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
 
         List<String> spinnerList = new ArrayList<>();
-        Iterator<String> iterator = fieldMap.keySet().iterator();
-        while(iterator.hasNext()) {
-            String key = iterator.next();
-            if (fieldMap.get(key).size() == 2)
-                spinnerList.add(key);
-        }
+        spinnerList.add("水流量");
+        spinnerList.add("Ph值");
+        spinnerList.add("水温");
+        spinnerList.add("浊度");
+        spinnerList.add("氨氮");
+        spinnerList.add("COD");
+        spinnerList.add("TOC");
 
-        if (!spinnerList.isEmpty())
-            field = spinnerList.get(0);
-        ArrayAdapter<String> arrAdapter= new ArrayAdapter<>(mContext, android.R.layout.simple_spinner_item, spinnerList);
-        arrAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mSpinner.setAdapter(arrAdapter);
-        mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        mSpinner.setItems(spinnerList);
+        mSpinner.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener() {
 
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view,
-                                       int position, long id) {
-                Spinner spinner=(Spinner) parent;
-                field = spinner.getItemAtPosition(position).toString();
+            public void onItemSelected(MaterialSpinner view, int position, long id, Object item) {
+                field = item.toString();
                 getHistoryDates();
             }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                field = null;
-            }
-
         });
+
+        if (!spinnerList.isEmpty())
+            field = spinnerList.get(0);
+        getHistoryDates();
+
         return view;
     }
 
     private void getHistoryDates() {
+        if (!isFirst) {
+            handleNext(processList);
+            return;
+        }
         Observable observable = null;
-
         if (type.equals(ActivatedCarbonPool.class.toString())) {
             observable = NetHelper.api(mContext).getActivatedCarbonPool(8640, "-createTime");
         } else if (type.equals(ChlorineAddPool.class.toString())) {
@@ -230,53 +244,77 @@ public class HistoryDataFragment extends Fragment implements OnChartValueSelecte
                             }
                             logger.info(type + " get history result success. Result size = " + processList.size());
                             handleNext(processList);
+                            HistoryDataFragment.this.processList = processList;
                         }
 
                         @Override
                         public void onCompleted() {
                             showProgress(false);
-                            mChart.animateY(3000);
+                            isFirst = false;
                         }
                     });
         }
     }
 
     public void handleNext(List<Process> processes) {
-        if (field == null) {
-            return;
-        }
         mChart.resetTracking();
         ArrayList<ILineDataSet> dataSets = new ArrayList<>();
 
         ArrayList<Entry> valuesIn = new ArrayList<>();
         ArrayList<Entry> valuesOut = new ArrayList<>();
 
-        for (int i = 0; i < processes.size(); i++) {
-            Process process = processes.get(i);
+        float xValue = Float.valueOf(formatter.format(new Date()));
+        for (int i = processes.size() > 12 ? 0 : 12 - processes.size(); i < 12; i++) {
+            float pos;
+            if (processes.size() > 12) {
+                pos = (processes.size() - 1) * i / 11;
+            } else {
+                pos = i + processes.size() - 12;
+            }
+            Process process = processes.get((int)pos);
             try {
+                /*Date createTime = df.parse(process.createTime);
+                float xValue = Float.valueOf(formatter.format(createTime));*/
                 valuesIn.add(new Entry(i, fieldMap.get(field).get(0).getFloat(process)));
                 valuesOut.add(new Entry(i, fieldMap.get(field).get(1).getFloat(process)));
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
-            }
+            } /*catch (ParseException e) {
+                e.printStackTrace();
+            }*/
         }
 
         LineDataSet lineDataSetIn = new LineDataSet(valuesIn, "进水指标");
         lineDataSetIn.setLineWidth(2.5f);
         lineDataSetIn.setCircleRadius(4f);
-        lineDataSetIn.setColor(ColorTemplate.VORDIPLOM_COLORS[0]);
-        lineDataSetIn.setCircleColor(ColorTemplate.VORDIPLOM_COLORS[0]);
+        lineDataSetIn.setColor(ColorTemplate.MATERIAL_COLORS[0]);
+        lineDataSetIn.setCircleColor(ColorTemplate.MATERIAL_COLORS[0]);
         lineDataSetIn.setMode(LineDataSet.Mode.HORIZONTAL_BEZIER);
+        lineDataSetIn.setDrawValues(false);
         dataSets.add(lineDataSetIn);
 
         LineDataSet lineDataSetOut = new LineDataSet(valuesOut, "出水指标");
         lineDataSetOut.setLineWidth(2.5f);
         lineDataSetOut.setCircleRadius(4f);
-        lineDataSetOut.setColor(ColorTemplate.VORDIPLOM_COLORS[1]);
-        lineDataSetOut.setCircleColor(ColorTemplate.VORDIPLOM_COLORS[1]);
+        lineDataSetOut.setColor(ColorTemplate.MATERIAL_COLORS[2]);
+        lineDataSetOut.setCircleColor(ColorTemplate.MATERIAL_COLORS[2]);
         lineDataSetOut.setMode(LineDataSet.Mode.HORIZONTAL_BEZIER);
+        lineDataSetOut.setDrawValues(false);
         dataSets.add(lineDataSetOut);
 
+        if (field == null) {
+            return;
+        } else if (field.equals("水流量")) {
+            for (ILineDataSet iSet : dataSets) {
+                LineDataSet set = (LineDataSet) iSet;
+                set.setDrawFilled(true);
+            }
+        } else {
+            for (ILineDataSet iSet : dataSets) {
+                LineDataSet set = (LineDataSet) iSet;
+                set.setDrawFilled(false);
+            }
+        }
         LineData data = new LineData(dataSets);
         mChart.setData(data);
         mChart.invalidate();
@@ -290,32 +328,28 @@ public class HistoryDataFragment extends Fragment implements OnChartValueSelecte
         // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
         // for very easy animations. If available, use these APIs to fade-in
         // the progress spinner.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
-
-            mFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-            mFormView.animate().setDuration(shortAnimTime).alpha(
-                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-                }
-            });
-
-            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            mProgressView.animate().setDuration(shortAnimTime).alpha(
-                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-                }
-            });
-        } else {
-            // The ViewPropertyAnimator APIs are not available, so simply show
-            // and hide the relevant UI components.
-            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            mFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+        if (mContext == null) {
+            return;
         }
+        int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+
+        mFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+        mFormView.animate().setDuration(shortAnimTime).alpha(
+                show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+            }
+        });
+
+        mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+        mProgressView.animate().setDuration(shortAnimTime).alpha(
+                show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+            }
+        });
     }
 
 

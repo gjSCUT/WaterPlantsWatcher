@@ -36,8 +36,9 @@ public class NetHelper {
             @Override public Response intercept(Chain chain) throws IOException {
                 Request originalRequest = chain.request();
                 String path = originalRequest.url().encodedPath();
-                if (Constant.token == null || originalRequest.header("Authorization") != null || !path.startsWith("/api")) {
-                    logger.info("Don't need Authorization");
+                String authHeader = originalRequest.header("Authorization");
+                if (Constant.token == null || authHeader != null && !authHeader.equals(" ") || !path.startsWith("/api")) {
+                    logger.info(path + " Don't need Authorization" + authHeader);
                     return chain.proceed(originalRequest);
                 }
                 String sToken = Constant.token.token_type + " " + Constant.token.access_token;

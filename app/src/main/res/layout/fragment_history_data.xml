@@ -1,7 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
     tools:context=".CurrentDataFragment">
 
     <ProgressBar
@@ -16,22 +16,18 @@
     <LinearLayout
         android:id="@+id/processes_form"
         android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
 
-        <Spinner
+        <com.jaredrummler.materialspinner.MaterialSpinner
             android:id="@+id/historySpinner"
             android:layout_width="match_parent"
-            android:layout_marginTop="10dp"
-            android:layout_weight="1"
-            android:layout_height="0dp"/>
+            android:layout_height="wrap_content"/>
 
         <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/historyChart"
-            android:layout_marginTop="10dp"
             android:layout_width="match_parent"
-            android:layout_weight="5"
-            android:layout_height="0dp"/>
+            android:layout_height="400dp"/>
     </LinearLayout>
 
 </RelativeLayout>
