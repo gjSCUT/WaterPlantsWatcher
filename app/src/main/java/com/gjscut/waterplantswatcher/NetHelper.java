@@ -110,7 +110,7 @@ public class NetHelper {
                         .addHeader("Authorization", sToken)
                         .build();
             } else {
-                logger.info("refresh execute failure");
+                logger.info("refresh execute failure" + Constant.token.toString());
                 Intent intent = new Intent(NetHelper.context, LoginActivity.class);
                 context.startActivity(intent);
                 editor.putString("accessToken", "");
