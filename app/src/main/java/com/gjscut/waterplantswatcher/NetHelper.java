@@ -25,7 +25,7 @@ public class NetHelper {
     private static final Logger logger = Logger.getLogger("NetHelper");
     public static NetHelper mInstance;
     public static IApi mApi;
-    public static final String BASE_URL = "http://121.196.207.208:3000/";
+    public static final String BASE_URL = "http://120.24.252.123:3000/";
 
     private static Context context;
     private Retrofit mRetrofit;

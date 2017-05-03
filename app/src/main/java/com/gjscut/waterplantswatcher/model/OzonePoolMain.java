@@ -6,4 +6,15 @@ package com.gjscut.waterplantswatcher.model;
 
 public class OzonePoolMain extends Process {
     public float zoneAmount;
+
+    @Override
+    public STATUS valid(String field) {
+        STATUS status = super.valid(field);
+        switch (field) {
+            case "ozoneAmount":
+                status = zoneAmount > 0.7 ? STATUS.HIGHER : zoneAmount >= 0 ? STATUS.NORMAL : STATUS.LOWER;
+                break;
+        }
+        return status;
+    }
 }

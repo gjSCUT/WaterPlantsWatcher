@@ -7,12 +7,12 @@ import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.support.v7.app.AlertDialog;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -32,8 +32,11 @@ import com.gjscut.waterplantswatcher.model.PumpRoomSecond;
 import com.gjscut.waterplantswatcher.model.SandLeachPool;
 import com.gjscut.waterplantswatcher.model.SuctionWell;
 
+import java.lang.reflect.Field;
 import java.net.SocketTimeoutException;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -54,10 +57,9 @@ import rx.schedulers.Schedulers;
 public class CurrentDataFragment extends Fragment {
     private final Logger logger = Logger.getLogger("CurrentDataFragment");
     final DecimalFormat decimalFormat = new DecimalFormat(".000");
-    final RecyclerView.Adapter mAdapter = new PumpAdapter();
     private Context mContext;
     private Unbinder unbinder;
-    private Pump[] mDatas = {};
+    private List<Pump> mDatas = new ArrayList<>();
     private ScheduledExecutorService service;
 
     @BindView(R.id.processes_progress)
@@ -86,12 +88,25 @@ public class CurrentDataFragment extends Fragment {
     @BindView(R.id.zoomAmountTv) View zoomAmountTv;
     @BindView(R.id.alumAmountTv) View alumAmountTv;
     @BindView(R.id.chlorineAmountTv) View chlorineAmountTv;
-    @BindView(R.id.pump_list) View mRecyclerView;
+    @BindView(R.id.pumpList) View mRecyclerView;
+
     @BindView(R.id.zoomGridLayout) View zoomGridLayout;
     @BindView(R.id.alumGridLayout) View alumGridLayout;
     @BindView(R.id.chlorineGridLayout) View chlorineGridLayout;
     @BindView(R.id.pumpGridLayout) View pumpGridLayout;
 
+    @BindView(R.id.item_pump_frequency1) TextView pumpFrequency1;
+    @BindView(R.id.item_pump_flow1) TextView pumpFlow1;
+    @BindView(R.id.item_pump_head1) TextView pumpHead1;
+    @BindView(R.id.item_pump_frequency2) TextView pumpFrequency2;
+    @BindView(R.id.item_pump_flow2) TextView pumpFlow2;
+    @BindView(R.id.item_pump_head2) TextView pumpHead2;
+    @BindView(R.id.item_pump_frequency3) TextView pumpFrequency3;
+    @BindView(R.id.item_pump_flow3) TextView pumpFlow3;
+    @BindView(R.id.item_pump_head3) TextView pumpHead3;
+    @BindView(R.id.item_pump_frequency4) TextView pumpFrequency4;
+    @BindView(R.id.item_pump_flow4) TextView pumpFlow4;
+    @BindView(R.id.item_pump_head4) TextView pumpHead4;
     private String type;
     private Map<String, Pair<View, View>> classGridTextMap;
     private boolean isFirst;
@@ -123,9 +138,6 @@ public class CurrentDataFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_current_data, container, false);
         unbinder = ButterKnife.bind(this, view);
-
-        ((RecyclerView) mRecyclerView).setLayoutManager(new LinearLayoutManager(mContext));
-        ((RecyclerView) mRecyclerView).setAdapter(mAdapter);
 
         type = getArguments().getString("type");
         isFirst = true;
@@ -252,6 +264,17 @@ public class CurrentDataFragment extends Fragment {
         codOutTv.setText(decimalFormat.format(p.codOut));
         tocOutTv.setText(decimalFormat.format(p.tocOut));
         flowOutTv.setText(decimalFormat.format(p.flowOut));
+
+        Field[] fields = Process.class.getFields();
+        String message = "";
+        for (int i = 0; i < fields.length; i++) {
+            String name = fields[i].getName();
+            if (name.equals("createTime") || name.equals("updateTIme"))
+                continue;
+            message = addMessage(name, message, p.valid(name));
+            Process.STATUS status = p.valid(name);
+        }
+        message += "\n";
         try {
             Iterator<String> iterator = classGridTextMap.keySet().iterator();
             boolean isShow = false;
@@ -266,30 +289,103 @@ public class CurrentDataFragment extends Fragment {
                         ChlorineAddPool chlorineAddPool = (ChlorineAddPool) p;
                         ((TextView) classGridTextMap.get(className).second)
                                 .setText(decimalFormat.format(chlorineAddPool.chlorineAmount));
+                        message = addMessage("chlorineAmount", message, chlorineAddPool.valid("chlorineAmount"));
                     } else if (p instanceof CoagulatePool) {
                         CoagulatePool coagulatePool = (CoagulatePool) p;
                         ((TextView) classGridTextMap.get(className).second)
                                 .setText(decimalFormat.format(coagulatePool.alumAmount));
+                        message = addMessage("alumAmount", message, coagulatePool.valid("alumAmount"));
                     } else if (p instanceof OzonePoolAdvance) {
                         OzonePoolAdvance ozonePoolAdvance = (OzonePoolAdvance) p;
                         ((TextView) classGridTextMap.get(className).second)
                                 .setText(decimalFormat.format(ozonePoolAdvance.zoneAmount));
+                        message = addMessage("ozoneAmount", message, ozonePoolAdvance.valid("ozoneAmount"));
                     } else if (p instanceof OzonePoolMain) {
                         OzonePoolMain ozonePoolMain = (OzonePoolMain) p;
                         ((TextView) classGridTextMap.get(className).second)
                                 .setText(decimalFormat.format(ozonePoolMain.zoneAmount));
+                        message = addMessage("ozoneAmount", message, ozonePoolMain.valid("ozoneAmount"));
                     } else if (p instanceof PumpRoomFirst) {
                         PumpRoomFirst pumpRoomFirst = (PumpRoomFirst) p;
-                        mDatas = pumpRoomFirst.pumps;
-                        mAdapter.notifyDataSetChanged();
+                        pumpFrequency1.setText(decimalFormat.format(pumpRoomFirst.pumps[0].frequency));
+                        pumpHead1.setText(decimalFormat.format(pumpRoomFirst.pumps[0].head));
+                        pumpFlow1.setText(decimalFormat.format(pumpRoomFirst.pumps[0].flow));
+                        pumpFrequency2.setText(decimalFormat.format(pumpRoomFirst.pumps[1].frequency));
+                        pumpHead2.setText(decimalFormat.format(pumpRoomFirst.pumps[1].head));
+                        pumpFlow2.setText(decimalFormat.format(pumpRoomFirst.pumps[1].flow));
+                        pumpFrequency3.setText(decimalFormat.format(pumpRoomFirst.pumps[2].frequency));
+                        pumpHead3.setText(decimalFormat.format(pumpRoomFirst.pumps[2].head));
+                        pumpFlow3.setText(decimalFormat.format(pumpRoomFirst.pumps[2].flow));
+                        pumpFrequency4.setText(decimalFormat.format(pumpRoomFirst.pumps[3].frequency));
+                        pumpHead4.setText(decimalFormat.format(pumpRoomFirst.pumps[3].head));
+                        pumpFlow4.setText(decimalFormat.format(pumpRoomFirst.pumps[3].flow));
+
+                        message = addMessage("order " + 0 + " frequency", message, pumpRoomFirst.valid("pumpfrequency", 0));
+                        message = addMessage("order " + 0 + " head", message, pumpRoomFirst.valid("pumphead", 0));
+                        message = addMessage("order " + 0 + " flow", message, pumpRoomFirst.valid("pumpflow", 0));
+                        message = addMessage("order " + 1 + " frequency", message, pumpRoomFirst.valid("pumpfrequency", 1));
+                        message = addMessage("order " + 1 + " head", message, pumpRoomFirst.valid("pumphead", 1));
+                        message = addMessage("order " + 1 + " flow", message, pumpRoomFirst.valid("pumpflow", 1));
+                        message = addMessage("order " + 2 + " frequency", message, pumpRoomFirst.valid("pumpfrequency", 2));
+                        message = addMessage("order " + 2 + " head", message, pumpRoomFirst.valid("pumphead", 2));
+                        message = addMessage("order " + 2 + " flow", message, pumpRoomFirst.valid("pumpflow", 2));
+                        message = addMessage("order " + 3 + " frequency", message, pumpRoomFirst.valid("pumpfrequency", 3));
+                        message = addMessage("order " + 3 + " head", message, pumpRoomFirst.valid("pumphead", 3));
+                        message = addMessage("order " + 3 + " flow", message, pumpRoomFirst.valid("pumpflow", 3));
                     } else if (p instanceof PumpRoomSecond) {
                         PumpRoomSecond pumpRoomSecond = (PumpRoomSecond) p;
-                        mDatas = pumpRoomSecond.pumps;
-                        mAdapter.notifyDataSetChanged();
+                        pumpFrequency1.setText(decimalFormat.format(pumpRoomSecond.pumps[0].frequency));
+                        pumpHead1.setText(decimalFormat.format(pumpRoomSecond.pumps[0].head));
+                        pumpFlow1.setText(decimalFormat.format(pumpRoomSecond.pumps[0].flow));
+                        pumpFrequency2.setText(decimalFormat.format(pumpRoomSecond.pumps[1].frequency));
+                        pumpHead2.setText(decimalFormat.format(pumpRoomSecond.pumps[1].head));
+                        pumpFlow2.setText(decimalFormat.format(pumpRoomSecond.pumps[1].flow));
+                        pumpFrequency3.setText(decimalFormat.format(pumpRoomSecond.pumps[2].frequency));
+                        pumpHead3.setText(decimalFormat.format(pumpRoomSecond.pumps[2].head));
+                        pumpFlow3.setText(decimalFormat.format(pumpRoomSecond.pumps[2].flow));
+                        pumpFrequency4.setText(decimalFormat.format(pumpRoomSecond.pumps[3].frequency));
+                        pumpHead4.setText(decimalFormat.format(pumpRoomSecond.pumps[3].head));
+                        pumpFlow4.setText(decimalFormat.format(pumpRoomSecond.pumps[3].flow));
+
+                        message = addMessage("order " + 0 + " frequency", message, pumpRoomSecond.valid("pumpfrequency", 0));
+                        message = addMessage("order " + 0 + " head", message, pumpRoomSecond.valid("pumphead", 0));
+                        message = addMessage("order " + 0 + " flow", message, pumpRoomSecond.valid("pumpflow", 0));
+                        message = addMessage("order " + 1 + " frequency", message, pumpRoomSecond.valid("pumpfrequency", 1));
+                        message = addMessage("order " + 1 + " head", message, pumpRoomSecond.valid("pumphead", 1));
+                        message = addMessage("order " + 1 + " flow", message, pumpRoomSecond.valid("pumpflow", 1));
+                        message = addMessage("order " + 2 + " frequency", message, pumpRoomSecond.valid("pumpfrequency", 2));
+                        message = addMessage("order " + 2 + " head", message, pumpRoomSecond.valid("pumphead", 2));
+                        message = addMessage("order " + 2 + " flow", message, pumpRoomSecond.valid("pumpflow", 2));
+                        message = addMessage("order " + 3 + " frequency", message, pumpRoomSecond.valid("pumpfrequency", 3));
+                        message = addMessage("order " + 3 + " head", message, pumpRoomSecond.valid("pumphead", 3));
+                        message = addMessage("order " + 3 + " flow", message, pumpRoomSecond.valid("pumpflow", 3));
                     } else if (p instanceof PumpRoomOut) {
                         PumpRoomOut pumpRoomOut = (PumpRoomOut) p;
-                        mDatas = pumpRoomOut.pumps;
-                        mAdapter.notifyDataSetChanged();
+                        pumpFrequency1.setText(decimalFormat.format(pumpRoomOut.pumps[0].frequency));
+                        pumpHead1.setText(decimalFormat.format(pumpRoomOut.pumps[0].head));
+                        pumpFlow1.setText(decimalFormat.format(pumpRoomOut.pumps[0].flow));
+                        pumpFrequency2.setText(decimalFormat.format(pumpRoomOut.pumps[1].frequency));
+                        pumpHead2.setText(decimalFormat.format(pumpRoomOut.pumps[1].head));
+                        pumpFlow2.setText(decimalFormat.format(pumpRoomOut.pumps[1].flow));
+                        pumpFrequency3.setText(decimalFormat.format(pumpRoomOut.pumps[2].frequency));
+                        pumpHead3.setText(decimalFormat.format(pumpRoomOut.pumps[2].head));
+                        pumpFlow3.setText(decimalFormat.format(pumpRoomOut.pumps[2].flow));
+                        pumpFrequency4.setText(decimalFormat.format(pumpRoomOut.pumps[3].frequency));
+                        pumpHead4.setText(decimalFormat.format(pumpRoomOut.pumps[3].head));
+                        pumpFlow4.setText(decimalFormat.format(pumpRoomOut.pumps[3].flow));
+
+                        message = addMessage("order " + 0 + " frequency", message, pumpRoomOut.valid("pumpfrequency", 0));
+                        message = addMessage("order " + 0 + " head", message, pumpRoomOut.valid("pumphead", 0));
+                        message = addMessage("order " + 0 + " flow", message, pumpRoomOut.valid("pumpflow", 0));
+                        message = addMessage("order " + 1 + " frequency", message, pumpRoomOut.valid("pumpfrequency", 1));
+                        message = addMessage("order " + 1 + " head", message, pumpRoomOut.valid("pumphead", 1));
+                        message = addMessage("order " + 1 + " flow", message, pumpRoomOut.valid("pumpflow", 1));
+                        message = addMessage("order " + 2 + " frequency", message, pumpRoomOut.valid("pumpfrequency", 2));
+                        message = addMessage("order " + 2 + " head", message, pumpRoomOut.valid("pumphead", 2));
+                        message = addMessage("order " + 2 + " flow", message, pumpRoomOut.valid("pumpflow", 2));
+                        message = addMessage("order " + 3 + " frequency", message, pumpRoomOut.valid("pumpfrequency", 3));
+                        message = addMessage("order " + 3 + " head", message, pumpRoomOut.valid("pumphead", 3));
+                        message = addMessage("order " + 3 + " flow", message, pumpRoomOut.valid("pumpflow", 3));
                     }
                 } else if (classGridTextMap.get(className).first != showView){
                     classGridTextMap.get(className).first.setVisibility(View.GONE);
@@ -305,7 +401,21 @@ public class CurrentDataFragment extends Fragment {
         }
     }
 
-
+    private String addMessage(String name, String message, Process.STATUS status) {
+        switch (status) {
+            case HIGHER:
+                message += name + "指标过高";
+                break;
+            case LOWER:
+                message += name + "指标过低";
+                break;
+            case INVALID:
+                message += name + "数值不合法";
+                break;
+        }
+        message += "\n";
+        return message;
+    }
     /**
      * Shows the progress UI and hides the login form.
      */
@@ -344,39 +454,64 @@ public class CurrentDataFragment extends Fragment {
         unbinder.unbind();
     }
 
-    class PumpAdapter extends RecyclerView.Adapter<PumpAdapter.MyViewHolder> {
-
-        @Override
-        public PumpAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            return new PumpAdapter.MyViewHolder(LayoutInflater.from(
-                    mContext).inflate(R.layout.item_pump, parent,
-                    false));
-        }
-
-        @Override
-        public void onBindViewHolder(PumpAdapter.MyViewHolder holder, int position) {
-            holder.orderTv.setText(decimalFormat.format(mDatas[position].order));
-            holder.frequencyTv.setText(decimalFormat.format(mDatas[position].frequency));
-            holder.headTv.setText(decimalFormat.format(mDatas[position].head));
-            holder.flowTv.setText(decimalFormat.format(mDatas[position].flow));
-        }
-
-        @Override
-        public int getItemCount() {
-            return mDatas.length;
-        }
-
-        class MyViewHolder extends RecyclerView.ViewHolder {
-            @BindView(R.id.item_pump_order) TextView orderTv;
-            @BindView(R.id.item_pump_frequency) TextView frequencyTv;
-            @BindView(R.id.item_pump_head) TextView headTv;
-            @BindView(R.id.item_pump_flow) TextView flowTv;
-
-            MyViewHolder(View view) {
-                super(view);
-                ButterKnife.bind(this, view);
-            }
-        }
+    private void showNormalDialog(String message){
+        final AlertDialog.Builder normalDialog =
+                new AlertDialog.Builder(mContext);
+        normalDialog.setTitle("警告！水质数据异常");
+        normalDialog.setMessage(message);
+        normalDialog.setPositiveButton("确定", null);
+        normalDialog.show();
     }
 
+    class PumpAdapter extends BaseAdapter {
+
+        @Override
+        public int getCount() {
+            return mDatas.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return null;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return 0;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            MyViewHolder holder;
+            if (convertView == null) {
+                convertView = LayoutInflater.from(getActivity()).inflate(R.layout.item_pump, null);
+                holder= new MyViewHolder(convertView);
+                convertView.setTag(holder);
+            } else {
+                holder = (MyViewHolder)convertView.getTag();
+            }
+
+            holder.orderTv.setText(String.valueOf(mDatas.get(position).order));
+            holder.frequencyTv.setText(String.valueOf(mDatas.get(position).frequency));
+            holder.headTv.setText(String.valueOf(mDatas.get(position).head));
+            holder.flowTv.setText(String.valueOf(mDatas.get(position).flow));
+            return convertView;
+        }
+
+
+    }
+
+    class MyViewHolder {
+        TextView orderTv;
+        TextView frequencyTv;
+        TextView headTv;
+        TextView flowTv;
+
+        MyViewHolder(View view) {
+            orderTv = (TextView) view.findViewById(R.id.item_pump_order);
+            frequencyTv = (TextView) view.findViewById(R.id.item_pump_frequency);
+            headTv = (TextView) view.findViewById(R.id.item_pump_head);
+            flowTv = (TextView) view.findViewById(R.id.item_pump_flow);
+        }
+    }
 }

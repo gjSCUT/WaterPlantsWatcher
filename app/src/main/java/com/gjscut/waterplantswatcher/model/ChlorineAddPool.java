@@ -6,4 +6,15 @@ package com.gjscut.waterplantswatcher.model;
 
 public class ChlorineAddPool extends Process {
     public float chlorineAmount;
+
+    @Override
+    public STATUS valid(String field) {
+        STATUS status = super.valid(field);
+        switch (field) {
+            case "chlorineAmount":
+                status = chlorineAmount > 50 ? STATUS.HIGHER : chlorineAmount >= 0 ? STATUS.NORMAL : STATUS.LOWER;
+                break;
+        }
+        return status;
+    }
 }

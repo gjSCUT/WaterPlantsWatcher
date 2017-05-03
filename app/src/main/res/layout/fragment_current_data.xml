@@ -1,6 +1,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     tools:context=".CurrentDataFragment">
 
@@ -17,337 +17,508 @@
     <TextView
         android:id="@+id/processes_error"
         style="?android:attr/progressBarStyleLarge"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:gravity="center"
         android:text="Connect to server timeout"
         android:visibility="gone" />
 
-    <LinearLayout
+    <ScrollView
         android:id="@+id/processes_form"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical" >
+        android:layout_height="wrap_content" >
 
-
-        <GridLayout
-            android:id="@+id/inGridLayout"
-            android:layout_width="fill_parent"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:columnCount="7"
-            android:rowCount="8"
-            android:padding="20dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_columnSpan="1"
-                android:text="" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="40dp"
-                android:layout_marginBottom="20dp"
-                android:layout_columnSpan="3"
-                android:textSize="20sp"
-                android:text="入水质量" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="40dp"
-                android:layout_marginBottom="20dp"
-                android:layout_columnSpan="3"
-                android:textSize="20sp"
-                android:text="出水质量" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:layout_columnSpan="1"
-                android:text="入水量" />
-            <TextView
-                android:id="@+id/flowInTv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="40dp"
-                android:layout_marginBottom="10dp"
-                android:layout_columnSpan="3"
-                android:ems="5" />
-            <TextView
-                android:id="@+id/flowOutTv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="40dp"
-                android:layout_marginBottom="10dp"
-                android:layout_columnSpan="3"
-                android:ems="5" />
+            android:orientation="vertical" >
 
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:layout_columnSpan="1"
-                android:text="Ph值" />
-            <TextView
-                android:id="@+id/phInTv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="40dp"
-                android:layout_marginBottom="10dp"
-                android:layout_columnSpan="3"
-                android:ems="5" />
-            <TextView
-                android:id="@+id/phOutTv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="40dp"
-                android:layout_marginBottom="10dp"
-                android:layout_columnSpan="3"
-                android:ems="5" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:layout_columnSpan="1"
-                android:text="水温" />
-            <TextView
-                android:id="@+id/waterTemperInTv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="40dp"
-                android:layout_marginBottom="10dp"
-                android:layout_columnSpan="3"
-                android:ems="5" />
-            <TextView
-                android:id="@+id/waterTemperOutTv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="40dp"
-                android:layout_marginBottom="10dp"
-                android:layout_columnSpan="3"
-                android:ems="5" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:layout_columnSpan="1"
-                android:text="浊度" />
-           <TextView
-                android:id="@+id/turbidityInTv"
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:layout_marginStart="40dp"
-               android:layout_marginBottom="10dp"
-               android:layout_columnSpan="3"
-               android:ems="5" />
-            <TextView
-                android:id="@+id/turbidityOutTv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="40dp"
-                android:layout_marginBottom="10dp"
-                android:layout_columnSpan="3"
-                android:ems="5" />
-
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:layout_columnSpan="1"
-                android:text="氨氮" />
-            <TextView
-                android:id="@+id/amlN2InTv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="40dp"
-                android:layout_marginBottom="10dp"
-                android:layout_columnSpan="3"
-                android:ems="5" />
-            <TextView
-                android:id="@+id/amlN2OutTv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="40dp"
-                android:layout_marginBottom="10dp"
-                android:layout_columnSpan="3"
-                android:ems="5" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:layout_columnSpan="1"
-                android:text="COD" />
-            <TextView
-                android:id="@+id/codInTv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="40dp"
-                android:layout_marginBottom="10dp"
-                android:layout_columnSpan="3"
-                android:ems="5" />
-            <TextView
-                android:id="@+id/codOutTv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="40dp"
-                android:layout_marginBottom="10dp"
-                android:layout_columnSpan="3"
-                android:ems="5" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:layout_columnSpan="1"
-                android:text="TOC" />
-            <TextView
-                android:id="@+id/tocInTv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="40dp"
-                android:layout_marginBottom="10dp"
-                android:layout_columnSpan="3"
-                android:ems="5" />
-            <TextView
-                android:id="@+id/tocOutTv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="40dp"
-                android:layout_marginBottom="10dp"
-                android:layout_columnSpan="3"
-                android:ems="5" />
-
-        </GridLayout>
-
-        <TextView
-            android:id="@+id/paramTv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="20dp"
-            android:textSize="20sp"
-            android:text="参数" />
-
-        <GridLayout
-            android:id="@+id/zoomGridLayout"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:columnCount="4"
-            android:rowCount="1"
-            android:padding="20dp">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_columnSpan="1"
-                android:text="臭氧投加量" />
-            <TextView
-                android:id="@+id/zoomAmountTv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="40dp"
-                android:layout_columnSpan="3"
-                android:ems="10" />
-        </GridLayout>
-
-        <GridLayout
-            android:id="@+id/chlorineGridLayout"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:columnCount="4"
-            android:rowCount="1"
-            android:padding="20dp">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_columnSpan="1"
-                android:text="氯投加量" />
-            <TextView
-                android:id="@+id/chlorineAmountTv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="40dp"
-                android:layout_columnSpan="3"
-                android:ems="10" />
-        </GridLayout>
-
-
-        <GridLayout
-            android:id="@+id/alumGridLayout"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:columnCount="4"
-            android:rowCount="1"
-            android:padding="20dp">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_columnSpan="1"
-                android:text="矾投加量" />
-            <TextView
-                android:id="@+id/alumAmountTv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="40dp"
-                android:layout_columnSpan="3"
-                android:ems="10" />
-        </GridLayout>
-
-
-        <GridLayout
-            android:id="@+id/pumpGridLayout"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:columnCount="4"
-            android:rowCount="3"
-            android:padding="20dp">
-
-
-            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:orientation="horizontal"
-                android:layout_columnSpan="4"
-                android:paddingBottom="20dp"
+            <GridLayout
+                android:id="@+id/inGridLayout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
+                android:layout_height="wrap_content"
+                android:columnCount="7"
+                android:rowCount="8"
+                android:padding="20dp">
 
                 <TextView
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="水泵序号" />
+                    android:layout_columnSpan="1"
+                    android:text="" />
                 <TextView
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="频率" />
+                    android:layout_marginStart="40dp"
+                    android:layout_marginBottom="20dp"
+                    android:layout_columnSpan="3"
+                    android:textSize="20sp"
+                    android:text="入水质量" />
                 <TextView
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="扬程" />
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="流量" />
-            </LinearLayout>
+                    android:layout_marginStart="40dp"
+                    android:layout_marginBottom="20dp"
+                    android:layout_columnSpan="3"
+                    android:textSize="20sp"
+                    android:text="出水质量" />
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/pump_list"
-                android:layout_columnSpan="4"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-        </GridLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:layout_columnSpan="1"
+                    android:text="入水量, m³/h\n(0~12000)" />
+                <TextView
+                    android:id="@+id/flowInTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="40dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_columnSpan="3"
+                    android:layout_gravity="center_vertical"
+                    android:ems="5" />
+                <TextView
+                    android:id="@+id/flowOutTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="40dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_columnSpan="3"
+                    android:layout_gravity="center_vertical"
+                    android:ems="5" />
 
-    </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:layout_columnSpan="1"
+                    android:text="Ph值\n(6~8)" />
+                <TextView
+                    android:id="@+id/phInTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="40dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_columnSpan="3"
+                    android:layout_gravity="center_vertical"
+                    android:ems="5" />
+                <TextView
+                    android:id="@+id/phOutTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="40dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_columnSpan="3"
+                    android:layout_gravity="center_vertical"
+                    android:ems="5" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:layout_columnSpan="1"
+                    android:text="水温, ℃ \n(-10~30)" />
+                <TextView
+                    android:id="@+id/waterTemperInTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="40dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_columnSpan="3"
+                    android:layout_gravity="center_vertical"
+                    android:ems="5" />
+                <TextView
+                    android:id="@+id/waterTemperOutTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="40dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_columnSpan="3"
+                    android:layout_gravity="center_vertical"
+                    android:ems="5" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:layout_columnSpan="1"
+                    android:text="浊度, NTU\n(0~150)" />
+               <TextView
+                    android:id="@+id/turbidityInTv"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:layout_marginStart="40dp"
+                   android:layout_marginBottom="10dp"
+                   android:layout_columnSpan="3"
+                   android:layout_gravity="center_vertical"
+                   android:ems="5" />
+                <TextView
+                    android:id="@+id/turbidityOutTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="40dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_columnSpan="3"
+                    android:layout_gravity="center_vertical"
+                    android:ems="5" />
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:layout_columnSpan="1"
+                    android:text="氨氮, mg/L\n(0~20)" />
+                <TextView
+                    android:id="@+id/amlN2InTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="40dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_columnSpan="3"
+                    android:layout_gravity="center_vertical"
+                    android:ems="5" />
+                <TextView
+                    android:id="@+id/amlN2OutTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="40dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_columnSpan="3"
+                    android:layout_gravity="center_vertical"
+                    android:ems="5" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:layout_columnSpan="1"
+                    android:text="COD, mg/L\n(0~50)" />
+                <TextView
+                    android:id="@+id/codInTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="40dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_columnSpan="3"
+                    android:layout_gravity="center_vertical"
+                    android:ems="5" />
+                <TextView
+                    android:id="@+id/codOutTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="40dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_columnSpan="3"
+                    android:layout_gravity="center_vertical"
+                    android:ems="5" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:layout_columnSpan="1"
+                    android:text="TOC, mg/L\n(0~30)" />
+                <TextView
+                    android:id="@+id/tocInTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="40dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_columnSpan="3"
+                    android:layout_gravity="center_vertical"
+                    android:ems="5" />
+                <TextView
+                    android:id="@+id/tocOutTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="40dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_columnSpan="3"
+                    android:layout_gravity="center_vertical"
+                    android:ems="5" />
+
+            </GridLayout>
+
+            <TextView
+                android:id="@+id/paramTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="20dp"
+                android:textSize="20sp"
+                android:text="参数" />
+
+            <GridLayout
+                android:id="@+id/zoomGridLayout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:columnCount="4"
+                android:rowCount="1"
+                android:padding="20dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_columnSpan="1"
+                    android:text="臭氧投加量\n(0~0.7, mg/L)" />
+                <TextView
+                    android:id="@+id/zoomAmountTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="40dp"
+                    android:layout_columnSpan="3"
+                    android:layout_gravity="center_vertical"
+                    android:ems="10" />
+            </GridLayout>
+
+            <GridLayout
+                android:id="@+id/chlorineGridLayout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:columnCount="4"
+                android:rowCount="1"
+                android:padding="20dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_columnSpan="1"
+                    android:text="氯投加量\n(0~50, mg/L)" />
+                <TextView
+                    android:id="@+id/chlorineAmountTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="40dp"
+                    android:layout_columnSpan="3"
+                    android:layout_gravity="center_vertical"
+                    android:ems="10" />
+            </GridLayout>
+
+
+            <GridLayout
+                android:id="@+id/alumGridLayout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:columnCount="4"
+                android:rowCount="1"
+                android:padding="20dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_columnSpan="1"
+                    android:text="矾投加量\n(0~50, mg/L)" />
+                <TextView
+                    android:id="@+id/alumAmountTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="40dp"
+                    android:layout_columnSpan="3"
+                    android:layout_gravity="center_vertical"
+                    android:ems="10" />
+            </GridLayout>
+
+
+            <GridLayout
+                android:id="@+id/pumpGridLayout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:columnCount="4"
+                android:rowCount="10"
+                android:padding="20dp">
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_columnSpan="4"
+                    android:paddingBottom="20dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" >
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:layout_gravity="center_vertical"
+                        android:text="水泵序号" />
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:layout_gravity="center_vertical"
+                        android:text="频率, mg/L\n(40~90)" />
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:layout_gravity="center_vertical"
+                        android:text="扬程, m\n(3~7)" />
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:layout_gravity="center_vertical"
+                        android:text="流量, m³/h\n(0~4000)" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/pumpList"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" >
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:paddingTop="20dp"
+                        android:paddingBottom="20dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" >
+
+                        <TextView
+                            android:id="@+id/item_pump_order1"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="1" />
+                        <TextView
+                            android:id="@+id/item_pump_frequency1"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="频率" />
+                        <TextView
+                            android:id="@+id/item_pump_flow1"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="扬程" />
+                        <TextView
+                            android:id="@+id/item_pump_head1"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="流量" />
+
+                    </LinearLayout>
+                    <LinearLayout android:orientation="horizontal"
+                        android:paddingTop="20dp"
+                        android:paddingBottom="20dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" >
+
+                        <TextView
+                            android:id="@+id/item_pump_order2"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="2" />
+                        <TextView
+                            android:id="@+id/item_pump_frequency2"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="频率" />
+                        <TextView
+                            android:id="@+id/item_pump_flow2"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="扬程" />
+                        <TextView
+                            android:id="@+id/item_pump_head2"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="流量" />
+
+                    </LinearLayout>
+                    <LinearLayout android:orientation="horizontal"
+                        android:paddingTop="20dp"
+                        android:paddingBottom="20dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" >
+
+                        <TextView
+                            android:id="@+id/item_pump_order3"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="3" />
+                        <TextView
+                            android:id="@+id/item_pump_frequency3"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="频率" />
+                        <TextView
+                            android:id="@+id/item_pump_flow3"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="扬程" />
+                        <TextView
+                            android:id="@+id/item_pump_head3"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="流量" />
+
+                    </LinearLayout>
+                    <LinearLayout android:orientation="horizontal"
+                        android:paddingTop="20dp"
+                        android:paddingBottom="20dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" >
+
+                        <TextView
+                            android:id="@+id/item_pump_order4"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="4" />
+                        <TextView
+                            android:id="@+id/item_pump_frequency4"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="频率" />
+                        <TextView
+                            android:id="@+id/item_pump_flow4"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="扬程" />
+                        <TextView
+                            android:id="@+id/item_pump_head4"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="流量" />
+
+                    </LinearLayout>
+                </LinearLayout>
+            </GridLayout>
+        </LinearLayout>
+    </ScrollView>
 </RelativeLayout>

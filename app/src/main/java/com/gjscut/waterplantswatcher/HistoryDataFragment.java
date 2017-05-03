@@ -60,6 +60,7 @@ import rx.schedulers.Schedulers;
 
 public class HistoryDataFragment extends Fragment implements OnChartValueSelectedListener {
     private final Logger logger = Logger.getLogger("HistoryDataFragment");
+    private final int HISTORY_LIMIT = 360;
     SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     SimpleDateFormat formatter = new SimpleDateFormat("HH");
     private Unbinder unbinder;
@@ -192,35 +193,35 @@ public class HistoryDataFragment extends Fragment implements OnChartValueSelecte
         }
         Observable observable = null;
         if (type.equals(ActivatedCarbonPool.class.toString())) {
-            observable = NetHelper.api(mContext).getActivatedCarbonPool(8640, "-createTime");
+            observable = NetHelper.api(mContext).getActivatedCarbonPool(HISTORY_LIMIT, "-createTime");
         } else if (type.equals(ChlorineAddPool.class.toString())) {
-            observable = NetHelper.api(mContext).getChlorineAddPool(8640, "-createTime");
+            observable = NetHelper.api(mContext).getChlorineAddPool(HISTORY_LIMIT, "-createTime");
             // spinnerList.add("氯投加量");
         } else if (type.equals(CoagulatePool.class.toString())) {
-            observable = NetHelper.api(mContext).getCoagulatePool(8640, "-createTime");
+            observable = NetHelper.api(mContext).getCoagulatePool(HISTORY_LIMIT, "-createTime");
             // spinnerList.add("矾投加量");
         } else if (type.equals(CombinedWell.class.toString())) {
-            observable = NetHelper.api(mContext).getCombinedWell(8640, "-createTime");
+            observable = NetHelper.api(mContext).getCombinedWell(HISTORY_LIMIT, "-createTime");
         } else if (type.equals(DepositPool.class.toString())) {
-            observable = NetHelper.api(mContext).getDepositPool(8640, "-createTime");
+            observable = NetHelper.api(mContext).getDepositPool(HISTORY_LIMIT, "-createTime");
         } else if (type.equals(DistributeWell.class.toString())) {
-            observable = NetHelper.api(mContext).getDistributeWell(8640, "-createTime");
+            observable = NetHelper.api(mContext).getDistributeWell(HISTORY_LIMIT, "-createTime");
         } else if (type.equals(OzonePoolAdvance.class.toString())) {
-            observable = NetHelper.api(mContext).getOzonePoolAdvance(8640, "-createTime");
+            observable = NetHelper.api(mContext).getOzonePoolAdvance(HISTORY_LIMIT, "-createTime");
             // spinnerList.add("预臭氧投加量");
         } else if (type.equals(OzonePoolMain.class.toString())) {
-            observable = NetHelper.api(mContext).getOzonePoolMain(8640, "-createTime");
+            observable = NetHelper.api(mContext).getOzonePoolMain(HISTORY_LIMIT, "-createTime");
             // spinnerList.add("主臭氧投加量");
         } else if (type.equals(PumpRoomFirst.class.toString())) {
-            observable = NetHelper.api(mContext).getPumpRoomFirst(8640, "-createTime");
+            observable = NetHelper.api(mContext).getPumpRoomFirst(HISTORY_LIMIT, "-createTime");
         } else if (type.equals(PumpRoomSecond.class.toString())) {
-            observable = NetHelper.api(mContext).getPumpRoomSecond(8640, "-createTime");
+            observable = NetHelper.api(mContext).getPumpRoomSecond(HISTORY_LIMIT, "-createTime");
         } else if (type.equals(PumpRoomOut.class.toString())) {
-            observable = NetHelper.api(mContext).getPumpRoomOut(8640, "-createTime");
+            observable = NetHelper.api(mContext).getPumpRoomOut(HISTORY_LIMIT, "-createTime");
         } else if (type.equals(SandLeachPool.class.toString())) {
-            observable = NetHelper.api(mContext).getSandLeachPool(8640, "-createTime");
+            observable = NetHelper.api(mContext).getSandLeachPool(HISTORY_LIMIT, "-createTime");
         } else if (type.equals(SuctionWell.class.toString())) {
-            observable = NetHelper.api(mContext).getSuctionWell(8640, "-createTime");
+            observable = NetHelper.api(mContext).getSuctionWell(HISTORY_LIMIT, "-createTime");
         } else {
             logger.warning("type error");
         }
@@ -264,12 +265,13 @@ public class HistoryDataFragment extends Fragment implements OnChartValueSelecte
         ArrayList<Entry> valuesOut = new ArrayList<>();
 
         float xValue = Float.valueOf(formatter.format(new Date()));
-        for (int i = processes.size() > 12 ? 0 : 12 - processes.size(); i < 12; i++) {
+        int size = 36;
+        for (int i = processes.size() > size ? 0 : size - processes.size(); i < size; i++) {
             float pos;
-            if (processes.size() > 12) {
-                pos = (processes.size() - 1) * i / 11;
+            if (processes.size() > size) {
+                pos = (processes.size() - 1) * i / (size - 1);
             } else {
-                pos = i + processes.size() - 12;
+                pos = i + processes.size() - size;
             }
             Process process = processes.get((int)pos);
             try {
@@ -286,18 +288,14 @@ public class HistoryDataFragment extends Fragment implements OnChartValueSelecte
 
         LineDataSet lineDataSetIn = new LineDataSet(valuesIn, "进水指标");
         lineDataSetIn.setLineWidth(2.5f);
-        lineDataSetIn.setCircleRadius(4f);
         lineDataSetIn.setColor(ColorTemplate.MATERIAL_COLORS[0]);
-        lineDataSetIn.setCircleColor(ColorTemplate.MATERIAL_COLORS[0]);
         lineDataSetIn.setMode(LineDataSet.Mode.HORIZONTAL_BEZIER);
         lineDataSetIn.setDrawValues(false);
         dataSets.add(lineDataSetIn);
 
         LineDataSet lineDataSetOut = new LineDataSet(valuesOut, "出水指标");
         lineDataSetOut.setLineWidth(2.5f);
-        lineDataSetOut.setCircleRadius(4f);
         lineDataSetOut.setColor(ColorTemplate.MATERIAL_COLORS[2]);
-        lineDataSetOut.setCircleColor(ColorTemplate.MATERIAL_COLORS[2]);
         lineDataSetOut.setMode(LineDataSet.Mode.HORIZONTAL_BEZIER);
         lineDataSetOut.setDrawValues(false);
         dataSets.add(lineDataSetOut);
@@ -308,11 +306,13 @@ public class HistoryDataFragment extends Fragment implements OnChartValueSelecte
             for (ILineDataSet iSet : dataSets) {
                 LineDataSet set = (LineDataSet) iSet;
                 set.setDrawFilled(true);
+                set.setDrawCircles(false);
             }
         } else {
             for (ILineDataSet iSet : dataSets) {
                 LineDataSet set = (LineDataSet) iSet;
                 set.setDrawFilled(false);
+                set.setDrawCircles(false);
             }
         }
         LineData data = new LineData(dataSets);
