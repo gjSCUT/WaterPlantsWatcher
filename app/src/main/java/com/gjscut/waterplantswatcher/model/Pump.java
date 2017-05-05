@@ -17,10 +17,10 @@ public class Pump {
                 status = frequency > 90 ? Process.STATUS.HIGHER : frequency >= 40 ? Process.STATUS.NORMAL : Process.STATUS.LOWER;
                 break;
             case "head":
-                status = frequency > 7 ? Process.STATUS.HIGHER : frequency >= 3 ? Process.STATUS.NORMAL : Process.STATUS.LOWER;
+                status = head > 7 ? Process.STATUS.HIGHER : head >= 3 ? Process.STATUS.NORMAL : Process.STATUS.LOWER;
                 break;
             case "flow":
-                status = frequency > 4000 ? Process.STATUS.HIGHER : frequency >= 0 ? Process.STATUS.NORMAL : Process.STATUS.LOWER;
+                status = flow > 4000 ? Process.STATUS.HIGHER : flow >= 0 ? Process.STATUS.NORMAL : Process.STATUS.LOWER;
                 break;
         }
         return status;

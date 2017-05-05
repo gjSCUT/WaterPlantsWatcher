@@ -275,16 +275,22 @@ public class HistoryDataFragment extends Fragment implements OnChartValueSelecte
             }
             Process process = processes.get((int)pos);
             try {
-                /*Date createTime = df.parse(process.createTime);
-                float xValue = Float.valueOf(formatter.format(createTime));*/
                 valuesIn.add(new Entry(i, fieldMap.get(field).get(0).getFloat(process)));
                 valuesOut.add(new Entry(i, fieldMap.get(field).get(1).getFloat(process)));
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
-            } /*catch (ParseException e) {
-                e.printStackTrace();
-            }*/
+            }
         }
+
+        /*for (int i = 0; i < processes.size(); i++) {
+            Process process = processes.get(i);
+            try {
+                valuesIn.add(new Entry(i, fieldMap.get(field).get(0).getFloat(process)));
+                valuesOut.add(new Entry(i, fieldMap.get(field).get(1).getFloat(process)));
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }*/
 
         LineDataSet lineDataSetIn = new LineDataSet(valuesIn, "进水指标");
         lineDataSetIn.setLineWidth(2.5f);
@@ -333,23 +339,31 @@ public class HistoryDataFragment extends Fragment implements OnChartValueSelecte
         }
         int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
-        mFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-        mFormView.animate().setDuration(shortAnimTime).alpha(
-                show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                mFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-            }
-        });
+        if (mFormView != null) {
+            mFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+            mFormView.animate().setDuration(shortAnimTime).alpha(
+                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    if (mFormView != null) {
+                        mFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+                    }
+                }
+            });
+        }
 
-        mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-        mProgressView.animate().setDuration(shortAnimTime).alpha(
-                show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            }
-        });
+        if (mProgressView != null) {
+            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+            mProgressView.animate().setDuration(shortAnimTime).alpha(
+                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    if (mProgressView != null) {
+                        mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+                    }
+                }
+            });
+        }
     }
 
 

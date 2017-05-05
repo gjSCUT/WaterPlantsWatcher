@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.view.menu.MenuBuilder;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -13,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.gjscut.waterplantswatcher.model.ActivatedCarbonPool;
@@ -29,6 +31,7 @@ import com.gjscut.waterplantswatcher.model.PumpRoomSecond;
 import com.gjscut.waterplantswatcher.model.SandLeachPool;
 import com.gjscut.waterplantswatcher.model.SuctionWell;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,6 +42,9 @@ import butterknife.ButterKnife;
 public class ProcessesActivity extends AppCompatActivity {
     @BindView(R.id.process_list)
     RecyclerView mRecyclerView;
+    @BindView(R.id.processImage)
+    Button mProcessImage;
+
     private List<ProcessItem> mDatas;
 
     protected void initData() {
@@ -71,14 +77,32 @@ public class ProcessesActivity extends AppCompatActivity {
         final RecyclerView.Adapter mAdapter = new ProcessAdapter();
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST));
+        mProcessImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ProcessesActivity.this, SummaryActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
+        if (menu != null) {
+            if (menu.getClass() == MenuBuilder.class) {
+                try {
+                    Method m = menu.getClass().getDeclaredMethod("setOptionalIconsVisible", Boolean.TYPE);
+                    m.setAccessible(true);
+                    m.invoke(menu, true);
+                } catch (Exception e) {
+                }
+            }
+        }
         getMenuInflater().inflate(R.menu.process_menu, menu);
         return true;
     }
+
     //and this to handle actions
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -96,6 +120,10 @@ public class ProcessesActivity extends AppCompatActivity {
             Intent intent = new Intent(ProcessesActivity.this, LoginActivity.class);
             startActivity(intent);
             finish();
+            return true;
+        } else if (id == R.id.action_contact) {
+            Intent intent = new Intent(this, ContactActivity.class);
+            startActivity(intent);
             return true;
         }
         return super.onOptionsItemSelected(item);

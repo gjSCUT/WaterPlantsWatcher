@@ -1,12 +1,16 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ProcessesActivity">
 
     <item
+        android:id="@+id/action_contact"
+        android:icon="@mipmap/ic_phone_grey600_24dp"
+        android:title="联系值班人员">
+    </item>
+
+    <item
         android:id="@+id/action_logout"
-        android:icon="@mipmap/ic_account_off_white_24dp"
-        android:orderInCategory="10"
-        android:title="Logout"
-        app:showAsAction="ifRoom|withText" />
+        android:icon="@mipmap/ic_account_off_grey600_24dp"
+        android:title="退出登录" />
+
 </menu>

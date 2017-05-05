@@ -4,6 +4,8 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -269,12 +271,11 @@ public class CurrentDataFragment extends Fragment {
         String message = "";
         for (int i = 0; i < fields.length; i++) {
             String name = fields[i].getName();
-            if (name.equals("createTime") || name.equals("updateTIme"))
+            if (name.equals("createTime") || name.equals("updateTIme") || name.equals("$change") || name.equals("serialVersionUID"))
                 continue;
             message = addMessage(name, message, p.valid(name));
             Process.STATUS status = p.valid(name);
         }
-        message += "\n";
         try {
             Iterator<String> iterator = classGridTextMap.keySet().iterator();
             boolean isShow = false;
@@ -396,6 +397,9 @@ public class CurrentDataFragment extends Fragment {
             } else {
                 paramTv.setVisibility(View.GONE);
             }
+            if (!message.isEmpty()) {
+                showNormalDialog(message);
+            }
         } catch (ClassCastException e) {
             e.printStackTrace();
         }
@@ -405,15 +409,17 @@ public class CurrentDataFragment extends Fragment {
         switch (status) {
             case HIGHER:
                 message += name + "指标过高";
+                message += "\n";
                 break;
             case LOWER:
                 message += name + "指标过低";
+                message += "\n";
                 break;
             case INVALID:
                 message += name + "数值不合法";
+                message += "\n";
                 break;
         }
-        message += "\n";
         return message;
     }
     /**
@@ -429,23 +435,31 @@ public class CurrentDataFragment extends Fragment {
         }
         int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
-        mFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-        mFormView.animate().setDuration(shortAnimTime).alpha(
-                show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                mFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-            }
-        });
+        if (mFormView != null) {
+            mFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+            mFormView.animate().setDuration(shortAnimTime).alpha(
+                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    if (mFormView != null) {
+                        mFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+                    }
+                }
+            });
+        }
 
-        mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-        mProgressView.animate().setDuration(shortAnimTime).alpha(
-                show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            }
-        });
+        if (mProgressView != null) {
+            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+            mProgressView.animate().setDuration(shortAnimTime).alpha(
+                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    if (mProgressView != null) {
+                        mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+                    }
+                }
+            });
+        }
     }
 
     @Override
@@ -459,7 +473,14 @@ public class CurrentDataFragment extends Fragment {
                 new AlertDialog.Builder(mContext);
         normalDialog.setTitle("警告！水质数据异常");
         normalDialog.setMessage(message);
-        normalDialog.setPositiveButton("确定", null);
+        normalDialog.setPositiveButton("忽略警告", null);
+        normalDialog.setNegativeButton("联系值班人员", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent intent = new Intent(mContext, ContactActivity.class);
+                startActivity(intent);
+            }
+        });
         normalDialog.show();
     }
 

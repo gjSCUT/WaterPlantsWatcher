@@ -394,14 +394,14 @@
                             android:gravity="center"
                             android:text="频率" />
                         <TextView
-                            android:id="@+id/item_pump_flow1"
+                            android:id="@+id/item_pump_head1"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:gravity="center"
                             android:text="扬程" />
                         <TextView
-                            android:id="@+id/item_pump_head1"
+                            android:id="@+id/item_pump_flow1"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -430,14 +430,14 @@
                             android:gravity="center"
                             android:text="频率" />
                         <TextView
-                            android:id="@+id/item_pump_flow2"
+                            android:id="@+id/item_pump_head2"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:gravity="center"
                             android:text="扬程" />
                         <TextView
-                            android:id="@+id/item_pump_head2"
+                            android:id="@+id/item_pump_flow2"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -466,14 +466,14 @@
                             android:gravity="center"
                             android:text="频率" />
                         <TextView
-                            android:id="@+id/item_pump_flow3"
+                            android:id="@+id/item_pump_head3"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:gravity="center"
                             android:text="扬程" />
                         <TextView
-                            android:id="@+id/item_pump_head3"
+                            android:id="@+id/item_pump_flow3"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -502,14 +502,14 @@
                             android:gravity="center"
                             android:text="频率" />
                         <TextView
-                            android:id="@+id/item_pump_flow4"
+                            android:id="@+id/item_pump_head4"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:gravity="center"
                             android:text="扬程" />
                         <TextView
-                            android:id="@+id/item_pump_head4"
+                            android:id="@+id/item_pump_flow4"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"

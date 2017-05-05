@@ -6,7 +6,7 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -25,12 +25,12 @@
         </activity>
         <activity
             android:name=".DataActivity"
-            android:label="Data Watcher">
-        </activity>
+            android:label="Data Watcher" />
         <activity
             android:name=".ProcessesActivity"
-            android:label="Processes">
-        </activity>
+            android:label="Processes" />
+        <activity android:name=".SummaryActivity" />
+        <activity android:name=".ContactActivity"></activity>
     </application>
 
 </manifest>
