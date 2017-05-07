@@ -24,11 +24,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:divider="@android:drawable/divider_horizontal_textfield"
+        android:showDividers="middle"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <Button
             android:id="@+id/processImage"
             style="?android:textAppearanceSmall"
+            android:background="@drawable/button_shape"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
